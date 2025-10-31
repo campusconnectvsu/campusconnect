@@ -4,7 +4,7 @@
 - [Overview](#overview)
 - [App Evaluation](#app-evaluation)
 - [Product Spec](#product-spec)
-- [Wireframes & User Flow](#wireframes--user-flow)
+- [Wireframes & User Flow](#wireframes)
 - [Timeline]()
 
 ---
@@ -106,24 +106,18 @@ By being **limited to VSU students via .edu email verification**, the app foster
 
 ## Wireframes
 
+![IMG_2192 HEIC](https://github.com/user-attachments/assets/e2fd5057-6e4c-406e-b05c-6c237656d9fd)
+
+### [BONUS] Digital Wireframes & Mockups
+
+### Attached below is the link for figma :
+https://www.figma.com/design/LXtFz8ENdOwSRn2Xtrfjr6/Campus-Connect_VSU?node-id=0-1&t=Tv5TT5ZgtnQaZiWT-1
 
 
+<img width="1057" height="945" alt="Screenshot 2025-10-31 at 11 38 08 AM" src="https://github.com/user-attachments/assets/b55bae68-9d86-4153-ac18-db34557b410c" />
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### [BONUS] Interactive Prototype
 
 ### RSVP Flow
 - On the **Event Detail screen**, students choose:
