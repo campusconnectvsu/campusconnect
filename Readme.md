@@ -225,6 +225,27 @@ https://www.figma.com/design/LXtFz8ENdOwSRn2Xtrfjr6/Campus-Connect_VSU?node-id=0
 | Week 12-16 | April 8 - May 12  | Finalization: Complete bug fixes, final code review, and presentation. |
 
 
+# Milestone 2 - Build Sprint 1 (Unit 8)
+
+## GitHub Project board
+<img width="1710" height="1088" alt="Screenshot 2025-11-11 at 12 08 35 PM" src="https://github.com/user-attachments/assets/49d4f30d-e841-4416-9a64-e630944afcb1" />
+
+
+## Issue cards
+<img width="1699" height="1092" alt="Screenshot 2025-11-11 at 12 07 58 PM" src="https://github.com/user-attachments/assets/0f7b74fa-07c1-4ab7-8828-5131d99d5d1f" />
+
+- This is for Milestone 2: Sprint 1 
+
+
+## Issues worked on this sprint
+List the issues you completed this sprint
+
+- Messages
+
+
+     
+- SplashPage
+  
 
 
 
