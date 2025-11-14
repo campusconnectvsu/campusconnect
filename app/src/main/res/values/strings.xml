@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Campus ConnectProject</string>
+    <string name="back_arrow">Back Arrow</string>
+    <string name="messages">Messages</string>
 </resources>
