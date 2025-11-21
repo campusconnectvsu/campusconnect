@@ -25,7 +25,7 @@
             android:name=".MessagesActivity"
             android:exported="false"/>
         <activity
-            android:name=".MainActivity"
+            android:name="@style/Theme.CampusConnectProject"
             android:exported="false"/>
         <activity
             android:name=".ConversationActivity"
