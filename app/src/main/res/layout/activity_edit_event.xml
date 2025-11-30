@@ -9,21 +9,27 @@
         android:id="@+id/editEventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Event Title"/>
+        android:hint="@string/event_title"
+        android:inputType="textCapSentences"
+        android:autofillHints="name"/>
 
     <EditText
         android:id="@+id/editEventLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Event Location"/>
+        android:hint="@string/event_location"
+        android:inputType="textCapWords"
+        android:autofillHints="postalAddress"/>
 
     <EditText
         android:id="@+id/editEventDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Event Date"/>
+        android:hint="@string/event_date"
+        android:inputType="date"
+        android:autofillHints="date"/>
 
     <Button
         android:id="@+id/saveEventButton"
@@ -31,6 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
-        android:text="Save"/>
+        android:text="@string/save"/>
 
 </LinearLayout>

@@ -2,4 +2,8 @@
     <string name="app_name">Campus ConnectProject</string>
     <string name="back_arrow">Back Arrow</string>
     <string name="messages">Messages</string>
+    <string name="event_title">Event Title</string>
+    <string name="event_location">Event Location</string>
+    <string name="event_date">Event Date</string>
+    <string name="save">Save</string>
 </resources>
