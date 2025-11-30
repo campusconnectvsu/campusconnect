@@ -1,5 +1,6 @@
 package com.example.campusconnectproject
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,17 @@ class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<Event
         holder.eventDate.text = event.date
         holder.eventTitle.text = event.title
         holder.eventLocation.text = event.location
+
+        // Set a click listener on the event card
+        holder.itemView.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, EditEventActivity::class.java).apply {
+                putExtra("EVENT_TITLE", event.title)
+                putExtra("EVENT_LOCATION", event.location)
+                putExtra("EVENT_DATE", event.date)
+            }
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount() = events.size

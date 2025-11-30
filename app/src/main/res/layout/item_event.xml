@@ -19,7 +19,8 @@
                 android:id="@+id/eventImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_event_placeholder"/>
 
             <TextView
                 android:id="@+id/eventDate"
