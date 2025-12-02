@@ -6,4 +6,5 @@
     <string name="event_location">Event Location</string>
     <string name="event_date">Event Date</string>
     <string name="save">Save</string>
+    <string name="view_details">View Details</string>
 </resources>

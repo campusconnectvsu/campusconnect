@@ -4,9 +4,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.neweventdetails.MainActivity as NewEventDetailsActivity
 
 class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
@@ -15,6 +17,7 @@ class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<Event
         val eventDate: TextView = view.findViewById(R.id.eventDate)
         val eventTitle: TextView = view.findViewById(R.id.eventTitle)
         val eventLocation: TextView = view.findViewById(R.id.eventLocation)
+        val viewDetailsButton: Button = view.findViewById(R.id.viewDetailsButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -30,8 +33,15 @@ class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<Event
         holder.eventTitle.text = event.title
         holder.eventLocation.text = event.location
 
-        // Set a click listener on the event card
+        // Set a click listener on the event card to go to the new details screen
         holder.itemView.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, NewEventDetailsActivity::class.java)
+            context.startActivity(intent)
+        }
+
+        // Set a click listener on the button to go to your original edit screen
+        holder.viewDetailsButton.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, EditEventActivity::class.java).apply {
                 putExtra("EVENT_TITLE", event.title)
