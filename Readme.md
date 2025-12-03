@@ -249,6 +249,15 @@ List the issues you completed this sprint
   
 <img width="500" height="1200" alt="Screenshot_20251202_171207" src="https://github.com/user-attachments/assets/dbd1e896-ac1d-4052-a8f7-0c739fb19288" />
 
-https://imgur.com/ZnFuruS
+![splashpage](https://github.com/user-attachments/assets/73f3e536-61a7-4a1e-846d-b1a3582ffdec)
+
+
+
+# Milestone 3 - Build Sprint 2 (Unit 9)
+
+## GitHub Project board
+
+## Completed user stories
+## App Demo Video
 
 
