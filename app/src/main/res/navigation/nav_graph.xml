@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_events">
+
+    <fragment
+        android:id="@+id/navigation_events"
+        android:name="com.example.campusconnectproject.EventsFragment"
+        android:label="fragment_events" />
+
+    <fragment
+        android:id="@+id/navigation_calendar"
+        android:name="com.example.campusconnectproject.CalendarFragment"
+        android:label="fragment_calendar" />
+
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.example.campusconnectproject.MessagesFragment"
+        android:label="fragment_messages" />
+
+</navigation>

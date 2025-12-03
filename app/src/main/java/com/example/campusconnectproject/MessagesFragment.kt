@@ -1,25 +1,31 @@
 package com.example.campusconnectproject
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.campusconnectproject.databinding.ActivityMessagesBinding
+import com.example.campusconnectproject.databinding.FragmentMessagesBinding
 
-class MessagesActivity : AppCompatActivity() {
+class MessagesFragment : Fragment() {
 
-    private lateinit var binding: ActivityMessagesBinding
+    private var _binding: FragmentMessagesBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMessagesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMessagesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        // Set up the back arrow
-        binding.backArrow.setOnClickListener {
-            finish() // Finishes the current activity and returns to the previous one
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.recyclerViewChats.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewChats.layoutManager = LinearLayoutManager(context)
 
         val chats = listOf(
             Chat("Fauziah", "I will do the voice over", "10:30 PM", R.drawable.ic_launcher_background, true),
@@ -32,5 +38,10 @@ class MessagesActivity : AppCompatActivity() {
         )
 
         binding.recyclerViewChats.adapter = ChatAdapter(chats)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
