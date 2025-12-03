@@ -257,7 +257,22 @@ List the issues you completed this sprint
 
 ## GitHub Project board
 
+<img width="1710" height="1069" alt="Screenshot 2025-12-02 at 8 07 39 PM" src="https://github.com/user-attachments/assets/410d898d-f654-4fb4-a868-c143b454d809" />
+
+
 ## Completed user stories
+- SignUp Page
+  
+  [https://imgur.com/XjFpzJb.gif](https://imgur.com/gallery/signup-kY9nEuG#5sKDu4d)
+  ![signup](https://github.com/user-attachments/assets/0fc41809-2358-4a5b-ba4c-a722f43370ef)
+
+
+- Login Page
+
+  [https://igmur.com/aixVA6F.gif](https://imgur.com/a/aixVA6F)
+  ![login](https://github.com/user-attachments/assets/21737907-ec54-4c4a-a7c1-496ffaadeda6)
+
+  
 ## App Demo Video
 
 
