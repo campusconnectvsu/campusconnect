@@ -249,5 +249,6 @@ List the issues you completed this sprint
   
 <img width="500" height="1200" alt="Screenshot_20251202_171207" src="https://github.com/user-attachments/assets/dbd1e896-ac1d-4052-a8f7-0c739fb19288" />
 
+https://imgur.com/ZnFuruS
 
 
