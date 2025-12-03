@@ -242,11 +242,37 @@ List the issues you completed this sprint
 
 - Messages
 
+<img width="545" height="1183" alt="Screenshot 2025-11-30 165051 22" src="https://github.com/user-attachments/assets/9da77908-d925-4537-ac9d-6e2f68523c66" />
 
      
 - SplashPage
   
+<img width="500" height="1200" alt="Screenshot_20251202_171207" src="https://github.com/user-attachments/assets/dbd1e896-ac1d-4052-a8f7-0c739fb19288" />
+
+![splashpage](https://github.com/user-attachments/assets/73f3e536-61a7-4a1e-846d-b1a3582ffdec)
 
 
+
+# Milestone 3 - Build Sprint 2 (Unit 9)
+
+## GitHub Project board
+
+<img width="1710" height="1069" alt="Screenshot 2025-12-02 at 8 07 39 PM" src="https://github.com/user-attachments/assets/410d898d-f654-4fb4-a868-c143b454d809" />
+
+
+## Completed user stories
+- SignUp Page
+  
+  [https://imgur.com/XjFpzJb.gif](https://imgur.com/gallery/signup-kY9nEuG#5sKDu4d)
+  ![signup](https://github.com/user-attachments/assets/0fc41809-2358-4a5b-ba4c-a722f43370ef)
+
+
+- Login Page
+
+  [https://igmur.com/aixVA6F.gif](https://imgur.com/a/aixVA6F)
+  ![login](https://github.com/user-attachments/assets/21737907-ec54-4c4a-a7c1-496ffaadeda6)
+
+  
+## App Demo Video
 
 
