@@ -38,7 +38,7 @@ class HomeActivity : AppCompatActivity() {
         // --- Add Event Functionality --- //
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
-            val newEvent = Event("New Campus Event", "Location to be decided", "20\nJUNE", R.drawable.ic_launcher_background)
+            val newEvent = Event("New Campus Event", "Location to be decided", "20\nJUNE", R.drawable.vsu_logo)
             upcomingEvents.add(newEvent)
             upcomingEventsAdapter.notifyItemInserted(upcomingEvents.size - 1)
             findViewById<RecyclerView>(R.id.upcomingEventsRecyclerView).scrollToPosition(upcomingEvents.size - 1)
@@ -56,17 +56,17 @@ class HomeActivity : AppCompatActivity() {
         if (isUpcoming) {
             upcomingEventsAdapter = adapter
             events.addAll(listOf(
-                Event("International Band Mu...", "Foster Hall, Basement", "10\nJUNE", R.drawable.ic_launcher_background),
-                Event("Jo Malone", "Radius Gallery", "10\nJUNE", R.drawable.ic_launcher_background),
-                Event("Art Club Mixer", "Singleton Center", "12\nJUNE", R.drawable.ic_launcher_background),
-                Event("Study Group Session", "Johnston Memorial Library", "14\nJUNE", R.drawable.ic_launcher_background),
-                Event("Outdoor Movie Night", "The VSU Quad", "15\nJUNE", R.drawable.ic_launcher_background)
+                Event("International Band Mu...", "Foster Hall, Basement", "10\nJUNE", R.drawable.vsu_logo),
+                Event("Jo Malone", "Radius Gallery", "10\nJUNE", R.drawable.vsu_logo),
+                Event("Art Club Mixer", "Singleton Center", "12\nJUNE", R.drawable.vsu_logo),
+                Event("Study Group Session", "Johnston Memorial Library", "14\nJUNE", R.drawable.vsu_logo),
+                Event("Outdoor Movie Night", "The VSU Quad", "15\nJUNE", R.drawable.vsu_logo)
             ))
         } else {
             // Add filler data for current and past events for now
              events.addAll(listOf(
-                Event("Sample Event 1", "Sample Location", "1\nJAN", R.drawable.ic_launcher_background),
-                Event("Sample Event 2", "Sample Location", "2\nFEB", R.drawable.ic_launcher_background)
+                Event("Sample Event 1", "Sample Location", "1\nJAN", R.drawable.vsu_logo),
+                Event("Sample Event 2", "Sample Location", "2\nFEB", R.drawable.vsu_logo)
             ))
         }
         

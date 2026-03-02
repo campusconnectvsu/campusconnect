@@ -11,6 +11,11 @@
         android:label="fragment_events" />
 
     <fragment
+        android:id="@+id/navigation_explore"
+        android:name="com.example.campusconnectproject.ExploreFragment"
+        android:label="fragment_explore" />
+
+    <fragment
         android:id="@+id/navigation_calendar"
         android:name="com.example.campusconnectproject.CalendarFragment"
         android:label="fragment_calendar" />

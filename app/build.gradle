@@ -46,6 +46,9 @@ dependencies {
     implementation libs.androidx.navigation.fragment.ktx
     implementation libs.androidx.navigation.ui.ktx
 
+    // Osmdroid
+    implementation 'org.osmdroid:osmdroid-android:6.1.18'
+
     // Firebase - BOM must be declared FIRST
     implementation platform('com.google.firebase:firebase-bom:33.0.0')
 

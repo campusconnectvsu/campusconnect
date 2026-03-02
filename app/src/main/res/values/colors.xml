@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="vsu_blue">#220087</color>
+    <color name="vsu_orange">#F36E21</color>
 </resources>

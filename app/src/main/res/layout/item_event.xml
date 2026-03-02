@@ -13,14 +13,16 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="100dp"
+            android:background="#F5F5F5"> <!-- Light grey background for the logo area -->
 
             <ImageView
                 android:id="@+id/eventImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_event_placeholder"/>
+                android:scaleType="fitCenter"
+                android:padding="8dp"
+                android:src="@drawable/vsu_logo"/>
 
             <TextView
                 android:id="@+id/eventDate"

@@ -25,20 +25,20 @@ class EventsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Create sample data
+        // Create sample data with the new VSU logo
         val upcomingEvents = listOf(
-            Event("International Band Mu...", "Foster Hall, Basement", "10 JUNE", R.drawable.ic_event_placeholder),
-            Event("Jo Malone", "Radius Gallery", "10 JUNE", R.drawable.ic_event_placeholder)
+            Event("International Band Mu...", "Foster Hall, Basement", "10 JUNE", R.drawable.vsu_logo),
+            Event("Jo Malone", "Radius Gallery", "10 JUNE", R.drawable.vsu_logo)
         )
 
         val currentEvents = listOf(
-            Event("Sample Event 1", "Sample Location", "1 JAN", R.drawable.ic_event_placeholder),
-            Event("Sample Event 2", "Sample Location", "2 FEB", R.drawable.ic_event_placeholder)
+            Event("Sample Event 1", "Sample Location", "1 JAN", R.drawable.vsu_logo),
+            Event("Sample Event 2", "Sample Location", "2 FEB", R.drawable.vsu_logo)
         )
 
         val pastEvents = listOf(
-            Event("Sample Event 1", "Sample Location", "1 JAN", R.drawable.ic_event_placeholder),
-            Event("Sample Event 2", "Sample Location", "2 FEB", R.drawable.ic_event_placeholder)
+            Event("Sample Event 1", "Sample Location", "1 JAN", R.drawable.vsu_logo),
+            Event("Sample Event 2", "Sample Location", "2 FEB", R.drawable.vsu_logo)
         )
 
         // Setup RecyclerViews
