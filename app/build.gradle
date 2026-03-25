@@ -37,7 +37,6 @@ android {
 }
 
 dependencies {
-    implementation project(':campusconnect')
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
@@ -55,9 +54,12 @@ dependencies {
     // Add the Firebase products you want to use
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
 
     // Testing
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 }

@@ -60,6 +60,40 @@
             android:name=".ConversationActivity"
             android:exported="false"/>
 
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".AboutAppActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".DeleteAccountActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".PushNotificationsActivity"
+            android:exported="false"/>
+
+
+        <activity
+            android:name=".GhostModeActivity"
+            android:exported="false"/>
+
+
+        <activity
+            android:name=".TermsConditionsActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".UserProfActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

@@ -6,11 +6,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.campusconnectproject.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private val db = FirebaseFirestore.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +33,18 @@ class SignupActivity : AppCompatActivity() {
                 if (password == confirmPassword) {
                     firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            val uid = firebaseAuth.currentUser?.uid
+                            val userMap = hashMapOf(
+                                "uid" to uid,
+                                "name" to name.lowercase(),
+                                "email" to email
+                            )
+                            if (uid != null) {
+                                db.collection("users")
+                                    .document(uid)
+                                    .set(userMap)
+                            }
+
                             Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this, LoginActivity::class.java))
                             finish()

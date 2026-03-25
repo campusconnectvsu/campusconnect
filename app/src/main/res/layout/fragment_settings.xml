@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="#220087"
+            android:paddingStart="16dp"
+            android:paddingTop="25dp"
+            android:paddingEnd="16dp">
+
+            <ImageView
+                android:id="@+id/bArrow"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/setHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@id/bArrow"
+                android:text="Settings"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingTop="25dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:text="Account"
+                android:textColor="#555555"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/ro_edit_prof"
+                layout="@layout/settings_item" />
+
+            <include
+                android:id="@+id/ro_change_passwrd"
+                layout="@layout/settings_item" />
+
+            <include
+                android:id="@+id/ro_delete_acc"
+                layout="@layout/settings_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="4dp"
+                android:text="Notifications"
+                android:textColor="#555555"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/ro_push_notifi"
+                layout="@layout/settings_item" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="4dp"
+                android:text="Privacy and Security"
+                android:textColor="#555555"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/ro_Gmode"
+                layout="@layout/settings_item" />
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="4dp"
+                android:text="General"
+                android:textColor="#555555"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/ro_about_app"
+                layout="@layout/settings_item" />
+
+            <include
+                android:id="@+id/ro_terms_conditions"
+                layout="@layout/settings_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="4dp"
+                android:text="Account"
+                android:textColor="#555555"
+                android:textStyle="bold" />
+
+            <include
+                android:id="@+id/ro_logout"
+                layout="@layout/settings_item" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
