@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/aboutAppTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:text="About Campus Connect"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/aboutAppDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="4dp"
+            android:paddingBottom="20dp"
+            android:text="Campus Connect is designed to help students at Virginia State University stay informed, discover events, navigate campus, communicate with peers, and stay connected with campus life."
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+</ScrollView>

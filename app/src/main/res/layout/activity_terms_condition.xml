@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/termsT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Terms and Conditions"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/termsIntro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="By using the Campus Connect app, you agree to the following Terms and Conditions. Please read them carefully."
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp"
+            android:paddingBottom="20dp" />
+
+        <TextView
+            android:id="@+id/term1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Use of the App\n\nCampus Connect is intended for students, staff, and faculty of Virginia State University. Users must not engage in harmful, fraudulent, or unauthorized activities while using the app."
+            android:textSize="15sp"
+            android:lineSpacingExtra="4dp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/term2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. Privacy and Data\n\nYour personal data will be used only to improve your campus experience. Your information will not be shared outside the platform except as required for essential features."
+            android:textSize="15sp"
+            android:lineSpacingExtra="4dp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/term3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. User Responsibilities\n\nUsers are responsible for keeping their accounts secure and reporting any suspicious activity."
+            android:textSize="15sp"
+            android:lineSpacingExtra="4dp"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/term4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4. Changes to Terms\n\nCampus Connect may update these Terms and Conditions at any time. You will be notified if major changes occur."
+            android:textSize="15sp"
+            android:lineSpacingExtra="4dp"
+            android:paddingBottom="20dp" />
+
+        <TextView
+            android:id="@+id/Footer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="© 2025 Campus Connect."
+            android:textSize="14sp"
+            android:paddingTop="12dp" />
+
+    </LinearLayout>
+
+</ScrollView>

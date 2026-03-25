@@ -32,7 +32,7 @@ class ConversationActivity : AppCompatActivity() {
         binding.sendButton.setOnClickListener {
             val text = binding.messageEditText.text.toString()
             if (text.isNotEmpty()) {
-                val message = Message(text, true) // true because it's a sent message
+                val message = Message(text, true)
                 messages.add(message)
                 adapter.notifyItemInserted(messages.size - 1)
                 binding.conversationRecyclerView.scrollToPosition(messages.size - 1)
