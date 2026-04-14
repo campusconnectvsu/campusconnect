@@ -2,13 +2,18 @@ package com.example.campusconnectproject
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
+import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.campusconnectproject.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityHomeBinding
 
     // --- Data Lists and Adapters --- //
     private val upcomingEvents = mutableListOf<Event>()
@@ -21,32 +26,48 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        
+        // Enable Edge-to-Edge
+        enableEdgeToEdge()
+        
+        // --- View Binding Setup --- //
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // --- Navigation to Messages --- //
-        val notificationBell: ImageView = findViewById(R.id.notification_bell)
-        notificationBell.setOnClickListener {
-            val intent = Intent(this, MessagesActivity::class.java)
+        // Handle Window Insets
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // padding top for status bar, padding bottom for navigation bar
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        // --- Modern Back Handling --- //
+        onBackPressedDispatcher.addCallback(this) {
+            finish()
+        }
+
+        // --- Navigation to Notifications --- //
+        binding.notificationBell.setOnClickListener {
+            val intent = Intent(this, NotificationsActivity::class.java)
             startActivity(intent)
         }
 
         // --- Setup All RecyclerViews --- //
-        setupRecyclerView(R.id.upcomingEventsRecyclerView, upcomingEvents, true)
-        setupRecyclerView(R.id.currentEventsRecyclerView, currentEvents, false)
-        setupRecyclerView(R.id.pastEventsRecyclerView, pastEvents, false)
+        setupRecyclerView(binding.upcomingEventsRecyclerView, upcomingEvents, true)
+        setupRecyclerView(binding.currentEventsRecyclerView, currentEvents, false)
+        setupRecyclerView(binding.pastEventsRecyclerView, pastEvents, false)
         
         // --- Add Event Functionality --- //
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             val newEvent = Event("New Campus Event", "Location to be decided", "20\nJUNE", R.drawable.vsu_logo)
             upcomingEvents.add(newEvent)
             upcomingEventsAdapter.notifyItemInserted(upcomingEvents.size - 1)
-            findViewById<RecyclerView>(R.id.upcomingEventsRecyclerView).scrollToPosition(upcomingEvents.size - 1)
+            binding.upcomingEventsRecyclerView.scrollToPosition(upcomingEvents.size - 1)
         }
     }
 
-    private fun setupRecyclerView(recyclerViewId: Int, events: MutableList<Event>, isUpcoming: Boolean) {
-        val recyclerView: RecyclerView = findViewById(recyclerViewId)
+    private fun setupRecyclerView(recyclerView: RecyclerView, events: MutableList<Event>, isUpcoming: Boolean) {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         
         // Create and set the adapter
@@ -69,7 +90,8 @@ class HomeActivity : AppCompatActivity() {
                 Event("Sample Event 2", "Sample Location", "2\nFEB", R.drawable.vsu_logo)
             ))
         }
-        
+
+        // In a production app, use DiffUtil here instead of notifyDataSetChanged()
         adapter.notifyDataSetChanged()
     }
 }

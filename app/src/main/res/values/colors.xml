@@ -4,4 +4,25 @@
     <color name="white">#FFFFFFFF</color>
     <color name="vsu_blue">#220087</color>
     <color name="vsu_orange">#F36E21</color>
+
+    <!-- Modern Color Palette -->
+    <color name="primary_blue">#5669FF</color>
+    <color name="background_light">#F8F9FE</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="background_dark">#121212</color>
+    <color name="surface_dark">#1E1E1E</color>
+
+    <color name="text_primary_light">#1A1A1A</color>
+    <color name="text_secondary_light">#747688</color>
+    <color name="text_primary_dark">#F5F5F5</color>
+    <color name="text_secondary_dark">#B0B0B0</color>
+
+    <color name="divider_light">#E0E0E0</color>
+    <color name="divider_dark">#333333</color>
+
+    <color name="button_bg_light">#F0F2FF</color>
+    <color name="button_bg_dark">#2A2D3F</color>
+
+    <color name="success_green">#4CAF50</color>
+    <color name="error_red">#F44336</color>
 </resources>

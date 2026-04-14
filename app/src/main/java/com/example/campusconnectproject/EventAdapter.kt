@@ -15,22 +15,46 @@ class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<Event
             binding.eventTitle.text = event.title
             binding.eventLocation.text = event.location
 
-            // Set a click listener on the event card to go to the details screen
-            itemView.setOnClickListener {
-                val context = itemView.context
-                val intent = Intent(context, EventDetailsActivity::class.java)
+            val context = itemView.context
+            if (EventManager.isJoined(event)) {
+                binding.viewDetailsButton.text = "Joined"
+                binding.viewDetailsButton.setTextColor(context.getColor(R.color.white))
+                binding.viewDetailsButton.backgroundTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.success_green))
+            } else {
+                binding.viewDetailsButton.text = "View Details"
+                binding.viewDetailsButton.setTextColor(context.getColor(R.color.primary_blue))
+                
+                // Use a themed background color for the button
+                val buttonBg = if (context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
+                    context.getColor(R.color.button_bg_dark)
+                } else {
+                    context.getColor(R.color.button_bg_light)
+                }
+                binding.viewDetailsButton.backgroundTintList = android.content.res.ColorStateList.valueOf(buttonBg)
+            }
+
+            // Helper to open details
+            val openDetails = {
+                val intent = Intent(context, EventDetailsActivity::class.java).apply {
+                    putExtra("EXTRA_EVENT", event)
+                }
                 context.startActivity(intent)
             }
 
-            // Set a click listener on the button to go to the edit screen
-            binding.viewDetailsButton.setOnClickListener {
-                val context = itemView.context
-                val intent = Intent(context, EditEventActivity::class.java).apply {
-                    putExtra("EVENT_TITLE", event.title)
-                    putExtra("EVENT_LOCATION", event.location)
-                    putExtra("EVENT_DATE", event.date)
-                }
-                context.startActivity(intent)
+            // Set click listeners
+            itemView.setOnClickListener { openDetails() }
+            binding.viewDetailsButton.setOnClickListener { openDetails() }
+
+            // Handle Favorite Toggle
+            var isFavorite = false // This should ideally come from a database/manager later
+            binding.btnFavorite.setOnClickListener {
+                isFavorite = !isFavorite
+                binding.btnFavorite.setImageResource(
+                    if (isFavorite) R.drawable.ic_favorite_border // Change to ic_favorite if you have it
+                    else R.drawable.ic_favorite_border
+                )
+                val tint = if (isFavorite) R.color.error_red else R.color.text_secondary_light
+                binding.btnFavorite.imageTintList = android.content.res.ColorStateList.valueOf(context.getColor(tint))
             }
         }
     }

@@ -17,6 +17,7 @@ class ChatAdapter(private val chatList: List<Chat>) :
         val textMessage: TextView = view.findViewById(R.id.textMessage)
         val textTime: TextView = view.findViewById(R.id.textTime)
         val onlineDot: View = view.findViewById(R.id.onlineDot)
+        val unreadCount: TextView = view.findViewById(R.id.unreadCount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
@@ -32,6 +33,13 @@ class ChatAdapter(private val chatList: List<Chat>) :
         holder.textTime.text = chat.time
         holder.imageProfile.setImageResource(chat.imageResId)
         holder.onlineDot.visibility = if (chat.isOnline) View.VISIBLE else View.GONE
+        
+        if (chat.unreadCount > 0) {
+            holder.unreadCount.visibility = View.VISIBLE
+            holder.unreadCount.text = chat.unreadCount.toString()
+        } else {
+            holder.unreadCount.visibility = View.GONE
+        }
 
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context

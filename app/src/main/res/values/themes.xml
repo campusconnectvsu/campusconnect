@@ -2,15 +2,22 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.CampusConnectProject" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/vsu_blue</item>
-        <item name="colorPrimaryVariant">@color/vsu_blue</item>
+        <item name="colorPrimary">@color/primary_blue</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/vsu_blue</item>
-        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Surface and Background -->
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text_primary_light</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary_light</item>
+
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
 
     <style name="Theme.CampusConnectProject" parent="Base.Theme.CampusConnectProject" />
+
+    <style name="CircleAppearance">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

@@ -7,4 +7,7 @@
     <string name="event_date">Event Date</string>
     <string name="save">Save</string>
     <string name="view_details">View Details</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="logout">Logout</string>
+    <string name="default_notification_channel_id">campus_connect_notifications</string>
 </resources>

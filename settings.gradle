@@ -24,5 +24,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Campus ConnectProject"
 include ':app'
-include ':campusconnect'
-project(':campusconnect').projectDir = new File(settingsDir, 'campusconnect/app')

@@ -5,5 +5,6 @@ data class Chat(
     val message: String,
     val time: String,
     val imageResId: Int,
-    val isOnline: Boolean
+    val isOnline: Boolean,
+    val unreadCount: Int = 0
 )

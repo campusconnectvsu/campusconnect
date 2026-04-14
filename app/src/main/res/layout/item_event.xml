@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="200dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="280dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="16dp"
-    app:cardCornerRadius="16dp">
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#F0F0F0"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,28 +18,49 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="#F5F5F5"> <!-- Light grey background for the logo area -->
+            android:layout_height="160dp">
 
             <ImageView
                 android:id="@+id/eventImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:padding="8dp"
-                android:src="@drawable/vsu_logo"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/vsu_logo" />
 
-            <TextView
-                android:id="@+id/eventDate"
+            <!-- Date Badge -->
+            <LinearLayout
+                android:id="@+id/dateContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|top"
-                android:layout_margin="8dp"
-                android:background="@drawable/date_background"
-                android:padding="8dp"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"/>
+                android:layout_margin="12dp"
+                android:background="@drawable/date_badge_bg"
+                android:elevation="4dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="6dp">
 
+                <TextView
+                    android:id="@+id/eventDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#5669FF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="10 JUNE" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnFavorite"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="end|top"
+                android:layout_margin="12dp"
+                android:background="@drawable/circle_white_bg"
+                android:elevation="4dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_favorite_border"
+                app:tint="#FF5252" />
         </FrameLayout>
 
         <LinearLayout
@@ -45,35 +71,54 @@
 
             <TextView
                 android:id="@+id/eventTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#1A1A1A"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:textSize="16sp"/>
+                tools:text="International Band Concert" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
+                    android:layout_marginEnd="6dp"
                     android:src="@drawable/ic_location"
-                    android:layout_marginEnd="8dp"/>
+                    app:tint="#9E9E9E" />
 
                 <TextView
                     android:id="@+id/eventLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#757575"
+                    android:textSize="14sp"
+                    tools:text="Foster Hall, Basement" />
             </LinearLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/viewDetailsButton"
-                android:layout_width="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/view_details"
-                style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#F0F2FF"
+                android:paddingVertical="10dp"
+                android:text="View Details"
+                android:textAllCaps="false"
+                android:textColor="#5669FF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
 

@@ -1,40 +1,80 @@
 package com.example.campusconnectproject
 
+import android.os.Build
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.example.campusconnectproject.databinding.ActivityEventDetailsBinding
 
 class EventDetailsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityEventDetailsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_event_details)
+        
+        binding = ActivityEventDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Get views
-        val tvTitle: TextView = findViewById(R.id.tvTitle)
-        val tvDateTime: TextView = findViewById(R.id.tvDateTime)
-        val tvLocation: TextView = findViewById(R.id.tvLocation)
-        val tvOrganizer: TextView = findViewById(R.id.tvOrganizer)
-        val tvDescription: TextView = findViewById(R.id.tvDescription)
-        val btnAccept: Button = findViewById(R.id.btnAccept)
-        val btnReject: Button = findViewById(R.id.btnReject)
-
-        // Initial data (consider passing these as intent extras later)
-        tvTitle.text = "International Band Music Concert"
-        tvDateTime.text = "14 December, 2021 • 4:00PM - 9:00PM"
-        tvLocation.text = "Daniel Gymnasium, 4th Ave, Petersburg, VA 23806"
-        tvOrganizer.text = "Organizer: Ashfaq Sayem"
-        tvDescription.text = "Enjoy your favorite music and have a great time with friends and family."
-
-        // Simple button actions
-        btnAccept.setOnClickListener {
-            Toast.makeText(this, "You accepted the event", Toast.LENGTH_SHORT).show()
+        onBackPressedDispatcher.addCallback(this) {
+            finish()
         }
 
-        btnReject.setOnClickListener {
-            Toast.makeText(this, "You rejected the event", Toast.LENGTH_SHORT).show()
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
+
+        // --- Retrieve Event Data Safely --- //
+        val event = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("EXTRA_EVENT", Event::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra("EXTRA_EVENT")
+        }
+
+        // --- Fill UI with actual Event data --- //
+        event?.let { currentEvent ->
+            binding.tvTitle.text = currentEvent.title
+            binding.ivEventHeader.setImageResource(currentEvent.imageResId)
+            
+            binding.tvDate.text = currentEvent.date.replace("\n", " ")
+            binding.tvTime.text = "Event Time: Scheduled" 
+            
+            binding.tvLocationTitle.text = currentEvent.location
+            binding.tvLocationAddress.text = "Campus Grounds" 
+            
+            binding.tvOrganizer.text = currentEvent.organizer
+            binding.tvDescription.text = currentEvent.description
+
+            updateButtonStates(currentEvent)
+
+            binding.btnAccept.setOnClickListener {
+                EventManager.joinEvent(currentEvent)
+                Toast.makeText(this, "Joined: ${currentEvent.title}", Toast.LENGTH_SHORT).show()
+                updateButtonStates(currentEvent)
+            }
+
+            binding.btnReject.setOnClickListener {
+                EventManager.leaveEvent(currentEvent)
+                Toast.makeText(this, "Removed: ${currentEvent.title}", Toast.LENGTH_SHORT).show()
+                updateButtonStates(currentEvent)
+            }
+        } ?: run {
+            binding.tvTitle.text = "Event Details"
+        }
+    }
+
+    private fun updateButtonStates(event: Event) {
+        if (EventManager.isJoined(event)) {
+            binding.btnAccept.text = "Joined"
+            binding.btnAccept.isEnabled = false
+            binding.btnReject.visibility = android.view.View.VISIBLE
+            binding.btnReject.text = "Leave Event"
+        } else {
+            binding.btnAccept.text = "Join Event"
+            binding.btnAccept.isEnabled = true
+            binding.btnReject.visibility = android.view.View.GONE
         }
     }
 }

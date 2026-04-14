@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -59,6 +60,34 @@
         <activity
             android:name=".ConversationActivity"
             android:exported="false"/>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".PrivacySettingsActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".NotificationsActivity"
+            android:exported="false"/>
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 
