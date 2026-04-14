@@ -8,22 +8,40 @@
     <fragment
         android:id="@+id/navigation_events"
         android:name="com.example.campusconnectproject.EventsFragment"
-        android:label="fragment_events" />
+        android:label="Virgina State University" />
 
     <fragment
         android:id="@+id/navigation_explore"
         android:name="com.example.campusconnectproject.ExploreFragment"
-        android:label="fragment_explore" />
+        android:label="Virgina State University" />
 
     <fragment
         android:id="@+id/navigation_calendar"
         android:name="com.example.campusconnectproject.CalendarFragment"
-        android:label="fragment_calendar" />
+        android:label="Virgina State University" />
 
     <fragment
         android:id="@+id/navigation_messages"
         android:name="com.example.campusconnectproject.MessagesFragment"
-        android:label="fragment_messages" />
+        android:label="Virgina State University" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.campusconnectproject.ProfileFragment"
+        android:label="Virgina State University"
+        tools:layout="@layout/fragment_profile"/>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.campusconnectproject.SettingsFragment"
+        tools:layout="@layout/fragment_settings"/>
+
+    <fragment
+        android:id="@+id/navigation_contact_us"
+        android:name="com.example.campusconnectproject.ContactUsFragment"
+        tools:layout="@layout/fragment_contact_us"/>
+
+
 
     <fragment
         android:id="@+id/navigation_profile"
