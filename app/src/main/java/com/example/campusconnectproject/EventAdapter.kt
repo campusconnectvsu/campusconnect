@@ -3,10 +3,27 @@ package com.example.campusconnectproject
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.campusconnectproject.databinding.ItemEventBinding
 
-class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventAdapter(initialList: List<Event>? = null) : ListAdapter<Event, EventAdapter.EventViewHolder>(EventDiffCallback()) {
+
+    init {
+        initialList?.let { submitList(it) }
+    }
+
+    class EventDiffCallback : DiffUtil.ItemCallback<Event>() {
+        override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
+            // Ideally, use a unique ID here (like a Firestore document ID)
+            return oldItem.title == newItem.title && oldItem.date == newItem.date
+        }
+
+        override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {
+            return oldItem == newItem
+        }
+    }
 
     inner class EventViewHolder(val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: Event) {
@@ -65,8 +82,6 @@ class EventAdapter(private val events: List<Event>) : RecyclerView.Adapter<Event
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bind(events[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = events.size
 }

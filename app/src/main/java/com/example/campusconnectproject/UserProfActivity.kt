@@ -3,220 +3,85 @@ package com.example.campusconnectproject
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+
+import com.example.campusconnectproject.databinding.ActivityUserProfBinding
+import com.bumptech.glide.Glide
+
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class UserProfActivity : AppCompatActivity() {
-    // UI variables
-    private lateinit var uName: TextView
-    private lateinit var followBtn: Button
-    private lateinit var followersC: TextView
-    private lateinit var followingC: TextView
-
-    // Firebase variables
-    private val db = FirebaseFirestore.getInstance()
-    private val curUser = FirebaseAuth.getInstance().currentUser?.uid
-    private var user_ID: String? = null
+    private lateinit var binding: ActivityUserProfBinding
+    private val viewModel: UserProfViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_prof)
+        enableEdgeToEdge()
+        binding = ActivityUserProfBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // bind UI variables to layout
-        uName = findViewById(R.id.userName)
-        followBtn = findViewById(R.id.followBtn)
-        followingC = findViewById(R.id.following)
-        followersC = findViewById(R.id.followers)
-
-        // get user id from intent
-        user_ID = intent.getStringExtra("USER_ID")
-        UData()
-        ifFollowing()
-        followCounts()
-        ifBlocked()
-
-        // set up click listener for follow button
-        followBtn.setOnClickListener {
-            if (followBtn.text == "Follow") {
-                follow()
-            } else {
-                followOptions()
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
 
-    }
+        val userId = intent.getStringExtra("USER_ID") ?: return
+        
+        setupObservers()
+        viewModel.checkInitialStatus(userId)
 
-
-    // check if profile is blocked by current user
-    private fun ifBlocked() {
-        val current = curUser ?: return
-        val target = user_ID ?: return
-
-        // check if user is blocked
-        db.collection("users")
-            .document(target)
-            .collection("blocked_users")
-            .document(current)
-            .get()
-            .addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    finish()
+        binding.followBtn.setOnClickListener {
+            if (binding.followBtn.text == getString(R.string.follow) || 
+                binding.followBtn.text == getString(R.string.following_label)) {
+                if (binding.followBtn.text == getString(R.string.following_label)) {
+                    showFollowOptions(userId)
                 } else {
-                    UData()
-                    ifFollowing()
-                    followCounts()
+                    viewModel.toggleFollow(userId)
                 }
-            }
-    }
-
-    //show options for unfollowing or blocking a user
-    private fun followOptions() {
-        val options = arrayOf("Unfollow", "block")
-
-        val builder = android.app.AlertDialog.Builder(this)
-        builder.setItems(options) { _, which ->
-            when (which) {
-                0 -> unfollow()
-                1 -> blockprof()
             }
         }
-        builder.show()
     }
 
-
-    // load user data from firestore
-    private fun UData() {
-        user_ID?.let { uid ->
-            // load user name from firestore
-            db.collection("users")
-                .document(uid)
-                .get()
-                .addOnSuccessListener { doc ->
-                    val name = doc.getString("name")
-                    uName.text = name
-                }
-
+    private fun setupObservers() {
+        viewModel.userName.observe(this) { name ->
+            binding.userName.text = name
         }
 
+        viewModel.isFollowing.observe(this) { isFollowing ->
+            binding.followBtn.text = if (isFollowing) getString(R.string.following_label) else getString(R.string.follow)
+        }
+
+        viewModel.followersCount.observe(this) { count ->
+            binding.followers.text = getString(R.string.followers_count, count)
+        }
+
+        viewModel.followingCount.observe(this) { count ->
+            binding.following.text = getString(R.string.following_count, count)
+        }
+
+        viewModel.isBlocked.observe(this) { isBlocked ->
+            if (isBlocked) finish()
+        }
+
+        // Example of Glide usage (Requirement 4)
+        // viewModel.profileImageUrl.observe(this) { url ->
+        //     Glide.with(this).load(url).circleCrop().into(binding.profileImage)
+        // }
     }
 
-    // follow profile
-    private fun follow() {
-        val currentUser = curUser ?: return
-        val target = user_ID ?: return
-        // add user to following collection
-        db.collection("users")
-            .document(currentUser)
-            .collection("following")
-            .document(target)
-            .set(hashMapOf("followed" to true))
-
-        // add target to followers collection
-        db.collection("users")
-            .document(target)
-            .collection("followers")
-            .document(currentUser)
-            .set(hashMapOf("followed" to true))
-        followBtn.text = "Following"
-        followCounts()
-
-    }
-
-    // check if user is already following profile
-    private fun ifFollowing() {
-        val current = curUser ?: return
-        val target = user_ID ?: return
-        db.collection("users")
-            .document(current)
-            .collection("following")
-            .document(target)
-            .get()
-            .addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    followBtn.text = "Following"
-                } else {
-                    followBtn.text = "Follow"
+    private fun showFollowOptions(userId: String) {
+        val options = arrayOf(getString(R.string.unfollow), getString(R.string.block))
+        android.app.AlertDialog.Builder(this)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> viewModel.toggleFollow(userId)
+                    1 -> viewModel.blockUser(userId)
                 }
             }
-    }
-
-    // unfollow profile
-    private fun unfollow() {
-        val current = curUser ?: return
-        val target = user_ID ?: return
-
-        // remove profile from following
-        db.collection("users")
-            .document(current)
-            .collection("following")
-            .document(target)
-            .delete()
-
-
-        // remove profile from followers
-        db.collection("users")
-            .document(target)
-            .collection("followers")
-            .document(current)
-            .delete()
-
-        followBtn.text = "Follow"
-        followCounts()
-    }
-
-    // block profile
-    private fun blockprof() {
-        val current = curUser ?: return
-        val target = user_ID ?: return
-
-        // add a profile to blocked users
-        db.collection("users")
-            .document(current)
-            .collection("blocked_users")
-            .document(target)
-            .set(hashMapOf("blocked" to true))
-
-        // remove a profile from following
-        db.collection("users")
-            .document(current)
-            .collection("following")
-            .document(target)
-            .delete()
-
-        // remove a profile from followers
-        db.collection("users")
-            .document(target)
-            .collection("followers")
-            .document(current)
-            .delete()
-
-        followBtn.text = "Blocked"
-        followBtn.isEnabled = false
-    }
-
-
-    // update follow counts
-    private fun followCounts() {
-        val target = user_ID ?: return
-
-        // get follow counts
-        db.collection("users")
-            .document(target)
-            .collection("followers")
-            .get()
-            .addOnSuccessListener { result ->
-                followersC.text = result.size().toString()
-            }
-        db.collection("users")
-            .document(target)
-            .collection("following")
-            .get()
-            .addOnSuccessListener { result ->
-                followingC.text = result.size().toString()
-            }
+            .show()
     }
 }
-
-
-

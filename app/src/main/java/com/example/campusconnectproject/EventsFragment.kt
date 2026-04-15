@@ -81,6 +81,23 @@ class EventsFragment : Fragment() {
             binding.currentEventsRecyclerView.adapter?.notifyDataSetChanged()
             binding.pastEventsRecyclerView.adapter?.notifyDataSetChanged()
         }
+
+        // Set up "See All" click listeners
+        binding.seeAllUpcoming.setOnClickListener {
+            openAllEvents("Upcoming Events")
+        }
+        binding.seeAllCurrent.setOnClickListener {
+            openAllEvents("Current Events")
+        }
+        binding.seeAllPast.setOnClickListener {
+            openAllEvents("Past Events")
+        }
+    }
+
+    private fun openAllEvents(category: String) {
+        val intent = Intent(requireContext(), AllEventsActivity::class.java)
+        intent.putExtra("CATEGORY", category)
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

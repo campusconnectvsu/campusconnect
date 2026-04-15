@@ -7,12 +7,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 private const val VIEW_TYPE_SENT = 1
 private const val VIEW_TYPE_RECEIVED = 2
 
-class ConversationAdapter(private val messages: List<Message>) :
+class ConversationAdapter(private var messages: List<Message>) :
     RecyclerView.Adapter<ConversationAdapter.MessageViewHolder>() {
+
+    private val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
 
     class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val messageText: TextView = view.findViewById(R.id.messageText)
@@ -42,9 +47,8 @@ class ConversationAdapter(private val messages: List<Message>) :
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val message = messages[position]
         
-        // Format timestamp to readable time
-        val sdf = java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault())
-        val timeString = sdf.format(java.util.Date(if (message.timestamp == 0L) System.currentTimeMillis() else message.timestamp))
+        // Use the pre-allocated formatter for better performance
+        val timeString = timeFormatter.format(Date(if (message.timestamp == 0L) System.currentTimeMillis() else message.timestamp))
         holder.messageTime.text = timeString
 
         if (message.imageUrl != null) {
@@ -52,6 +56,7 @@ class ConversationAdapter(private val messages: List<Message>) :
             holder.messageText.visibility = View.GONE
             Glide.with(holder.itemView.context)
                 .load(message.imageUrl)
+                .centerCrop()
                 .into(holder.messageImage)
         } else {
             holder.messageImage.visibility = View.GONE
@@ -61,4 +66,10 @@ class ConversationAdapter(private val messages: List<Message>) :
     }
 
     override fun getItemCount() = messages.size
+
+    fun updateMessages(newMessages: List<Message>) {
+        // In a real app, use DiffUtil here for even better performance
+        this.messages = newMessages
+        notifyDataSetChanged()
+    }
 }

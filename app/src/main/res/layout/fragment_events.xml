@@ -10,39 +10,28 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="#F8F9FE"
         app:elevation="0dp">
 
-        <RelativeLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/headerTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Events"
-                android:textColor="#1A1A1A"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+            android:layout_height="?attr/actionBarSize"
+            app:title="Events"
+            app:titleTextColor="#1A1A1A">
 
             <ImageView
                 android:id="@+id/notificationBell"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Notifications"
+                android:padding="8dp"
                 android:src="@drawable/ic_notifications"
                 app:tint="#1A1A1A" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#EEEEEE" />
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -76,10 +65,13 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/seeAllUpcoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="See All"
                     android:textColor="#5669FF"
                     android:textSize="14sp"
@@ -113,10 +105,13 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/seeAllCurrent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="See All"
                     android:textColor="#5669FF"
                     android:textSize="14sp"
@@ -150,10 +145,13 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/seeAllPast"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="See All"
                     android:textColor="#5669FF"
                     android:textSize="14sp"
