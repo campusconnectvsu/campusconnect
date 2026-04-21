@@ -21,7 +21,7 @@ class EventDetailsActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.toolbar.setNavigationOnClickListener {
+        binding.tbar.setNavigationOnClickListener {
             finish()
         }
 

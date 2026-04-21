@@ -14,9 +14,12 @@ import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-
 import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import android.content.Intent
+import androidx.fragment.app.setFragmentResult
 
 class ExploreFragment : Fragment() {
 
@@ -24,6 +27,9 @@ class ExploreFragment : Fragment() {
     private val map get() = _map!!
     private var searchView: SearchView? = null
     private val vsuPoint = GeoPoint(37.2343, -77.4191)
+
+    private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     // Corrected VSU Campus Locations with High Precision Coordinates
     private val campusLocations = mapOf(
@@ -51,8 +57,9 @@ class ExploreFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Configuration.getInstance().load(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))
-        
+        Configuration.getInstance()
+            .load(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))
+
         val view = inflater.inflate(R.layout.fragment_explore, container, false)
         _map = view.findViewById(R.id.map)
         searchView = view.findViewById(R.id.searchView)
@@ -64,10 +71,10 @@ class ExploreFragment : Fragment() {
 
         view.post {
             if (_map == null) return@post
-            
+
             map.setTileSource(TileSourceFactory.MAPNIK)
             map.setMultiTouchControls(true)
-            map.isTilesScaledToDpi = true 
+            map.isTilesScaledToDpi = true
             map.tilesScaleFactor = 1.3f
 
             map.controller.setZoom(17.5)
@@ -94,16 +101,21 @@ class ExploreFragment : Fragment() {
     }
 
     private fun setupChips(view: View) {
-        view.findViewById<Chip>(R.id.chipLibrary).setOnClickListener { performCategorySearch("Library") }
-        view.findViewById<Chip>(R.id.chipDining).setOnClickListener { performCategorySearch("Dining") }
-        view.findViewById<Chip>(R.id.chipAcademic).setOnClickListener { performCategorySearch("Academic") }
-        view.findViewById<Chip>(R.id.chipResidence).setOnClickListener { performCategorySearch("Residence") }
-        view.findViewById<Chip>(R.id.chipSports).setOnClickListener { performCategorySearch("Sports") }
+        view.findViewById<Chip>(R.id.chipLibrary)
+            .setOnClickListener { performCategorySearch("Library") }
+        view.findViewById<Chip>(R.id.chipDining)
+            .setOnClickListener { performCategorySearch("Dining") }
+        view.findViewById<Chip>(R.id.chipAcademic)
+            .setOnClickListener { performCategorySearch("Academic") }
+        view.findViewById<Chip>(R.id.chipResidence)
+            .setOnClickListener { performCategorySearch("Residence") }
+        view.findViewById<Chip>(R.id.chipSports)
+            .setOnClickListener { performCategorySearch("Sports") }
     }
 
     private fun performCategorySearch(category: String) {
         map.overlays.clear()
-        
+
         campusLocations.filter { it.value.second == category }.forEach { (name, data) ->
             val marker = Marker(map)
             marker.position = data.first
@@ -112,14 +124,15 @@ class ExploreFragment : Fragment() {
             marker.snippet = "VSU Campus"
             map.overlays.add(marker)
         }
-        
+
         if (map.overlays.isNotEmpty()) {
             val firstMatch = (map.overlays[0] as Marker).position
             map.controller.animateTo(firstMatch)
             map.controller.setZoom(18.0)
-            Toast.makeText(requireContext(), "Showing $category locations", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Showing $category locations", Toast.LENGTH_SHORT)
+                .show()
         }
-        
+
         map.invalidate()
     }
 
@@ -141,17 +154,17 @@ class ExploreFragment : Fragment() {
 
     private fun performSearch(query: String) {
         val lowercaseQuery = query.lowercase().trim()
-        
+
         // Find match: prioritize exact matches, then substrings
         val match = campusLocations.entries.find { it.key.lowercase() == lowercaseQuery }
             ?: campusLocations.entries.find { it.key.lowercase().contains(lowercaseQuery) }
 
         if (match != null) {
             val destination = match.value.first
-            
+
             // Clear previous markers
             map.overlays.clear()
-            
+
             // Add the marker
             val marker = Marker(map)
             marker.position = destination
@@ -159,15 +172,38 @@ class ExploreFragment : Fragment() {
             marker.title = match.key
             marker.snippet = "VSU Campus"
             map.overlays.add(marker)
-            
+
             // Move camera and show the correct label
             map.controller.animateTo(destination)
             map.controller.setZoom(20.0)
             marker.showInfoWindow()
-            
+
             Toast.makeText(requireContext(), "Found: ${match.key}", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(requireContext(), "Location not found on campus", Toast.LENGTH_SHORT).show()
+            val currentUid = auth.currentUser?.uid ?: return
+            db.collection("users")
+                .orderBy("name")
+                .startAt(lowercaseQuery)
+                .endAt(lowercaseQuery + "\uf8ff")
+                .get()
+                .addOnSuccessListener { result ->
+                    val users = result.documents.filter { it.getString("uid") != currentUid }
+                    if (users.isEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            " No locations or people found",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        val uid = users[0].getString("uid") ?: return@addOnSuccessListener
+                        val intent = Intent(requireContext(), UserProfActivity::class.java)
+                        intent.putExtra("USER_ID", uid)
+                        startActivity(intent)
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Search failed", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 

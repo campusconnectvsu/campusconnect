@@ -32,7 +32,7 @@ class ConversationActivity : AppCompatActivity() {
         binding = ActivityConversationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.tbar)
 
         val chatName = intent.getStringExtra("chat_name")
         supportActionBar?.title = chatName

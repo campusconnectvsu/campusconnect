@@ -16,7 +16,7 @@
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/tbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_arrow_back"
@@ -304,6 +304,21 @@
                         android:textColor="?attr/colorOnSurface"
                         app:iconPadding="16dp"
                         app:iconTint="?attr/colorOnSurfaceVariant" />
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLogout"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginHorizontal="0dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="40dp"
+                        android:text = "Logout"
+                        android:textAllCaps="false"
+                        android:textColor="#F44336"
+                        app:strokeColor ="#F44336"
+                        app:cornerRadius="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

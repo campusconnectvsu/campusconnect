@@ -11,6 +11,7 @@ class CampusConnectApplication : Application() {
         setupFirestoreOfflinePersistence()
     }
 
+
     private fun setupFirestoreOfflinePersistence() {
         val db = FirebaseFirestore.getInstance()
         

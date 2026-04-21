@@ -43,9 +43,4 @@
 
 
 
-    <fragment
-        android:id="@+id/navigation_profile"
-        android:name="com.example.campusconnectproject.ProfileFragment"
-        android:label="fragment_profile" />
-
 </navigation>

@@ -19,7 +19,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.toolbar.setNavigationOnClickListener {
+        binding.tbar.setNavigationOnClickListener {
             finish()
         }
 

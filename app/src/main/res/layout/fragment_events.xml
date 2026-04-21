@@ -14,7 +14,7 @@
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/tbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Events"
