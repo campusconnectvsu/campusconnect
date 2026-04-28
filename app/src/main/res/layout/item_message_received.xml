@@ -4,23 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="3dp"
     android:gravity="start">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:background="@drawable/received_message_bubble"
-        android:padding="12dp">
+        android:paddingHorizontal="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp"
+        android:maxWidth="260dp">
 
         <TextView
             android:id="@+id/messageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="15sp"
+            android:lineSpacingExtra="2dp"
             android:visibility="gone"
-            tools:text="Hi there!"
+            tools:text="I'm good thanks!"
             tools:visibility="visible" />
 
         <ImageView
@@ -35,12 +41,12 @@
             android:id="@+id/messageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/messageText"
-            android:layout_alignStart="@id/messageText"
-            android:layout_marginTop="4dp"
-            android:textColor="#80000000"
+            android:layout_gravity="start"
+            android:layout_marginTop="2dp"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="10sp"
             tools:text="10:31 PM" />
-    </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

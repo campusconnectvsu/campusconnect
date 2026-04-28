@@ -23,6 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.bumptech.glide.Glide
 
 
 class ProfileFragment : Fragment() {
@@ -41,8 +42,7 @@ class ProfileFragment : Fragment() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
-            binding.profImage.setImageURI(uri)
-            Toast.makeText(requireContext(), "Profile Pic updated", Toast.LENGTH_SHORT).show()
+            upload_ProfPic(uri)
         }
     }
 
@@ -111,15 +111,24 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener { doc ->
                 val name = doc.getString("name") ?: currentUser.email ?: "user"
                 val bio = doc.getString("bio") ?: ""
+                val prof_picUrl = doc.getString("profilePicUrl")
                 binding.tUserName.text = name
                 binding.tvTbarUname.text = name
-                if ( bio.isNotEmpty()){
+                if (bio.isNotEmpty()) {
                     binding.tBio.text = bio
                     binding.tBio.visibility = View.VISIBLE
                 } else {
                     binding.tBio.visibility = View.GONE
                 }
+                if (!prof_picUrl.isNullOrEmpty()) {
+                    Glide.with(this)
+                        .load(prof_picUrl)
+                        .circleCrop()
+                        .placeholder(com.example.campusconnectproject.R.drawable.ic_person)
+                        .into(binding.profImage)
+                }
             }
+
 
         fire_store.collection("users").document(currentUser.uid).collection("followers").get()
             .addOnSuccessListener { binding.tvFollowerC.text = it.size().toString() }
@@ -127,6 +136,33 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener { binding.tFollowingCount.text = it.size().toString() }
 
     }
+
+    private  fun upload_ProfPic(uri: Uri){
+        val uid = fire_Auth.currentUser?.uid?: return
+        Toast.makeText(requireContext(), "Uploading profile picture...", Toast.LENGTH_SHORT).show()
+
+        val storage_ref = storage.reference.child("profile_pics/$uid.jpg")
+        storage_ref.putFile(uri)
+            .addOnSuccessListener {
+                storage_ref.downloadUrl.addOnSuccessListener { downloadUrl->
+                    fire_store.collection("users").document(uid)
+                        .update("profilePicUrl", downloadUrl.toString())
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "profile picture updated!", Toast.LENGTH_SHORT).show()
+                            Glide.with(this)
+                                .load(downloadUrl)
+                                .circleCrop()
+                                .into(binding.profImage)
+                        }
+                }
+            }
+            .addOnFailureListener { e->
+                Toast.makeText(requireContext(), "Upload failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+
 
     private fun setupButtons() {
         binding.fabChangeProfilePicture.setOnClickListener {
@@ -142,7 +178,7 @@ class ProfileFragment : Fragment() {
         binding.ShareBn.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, "Check ut my campus connect profile")
+                putExtra(Intent.EXTRA_TEXT, "Check out my campus connect profile")
             }
             startActivity(Intent.createChooser(shareIntent, "Share Profile"))
         }
@@ -153,7 +189,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnMenu.setOnClickListener {
-            startActivity(Intent(requireActivity(), SettingsActivity:: class.java))
+            startActivity(Intent(requireActivity(), SettingsActivity::class.java))
         }
 
         binding.fabNewPost.setOnClickListener {
@@ -250,7 +286,7 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener { url ->
                     fire_store.collection("posts").add(
-                        hashMapOf("userId" to uid, "imageUrl" to url.toString())
+                        hashMapOf("userId" to uid, "imageUrl" to url.toString(), "timestamp" to System.currentTimeMillis())
                     ).addOnSuccessListener {
                         Toast.makeText(requireContext(), "Posted", Toast.LENGTH_SHORT).show()
                         loadPosts()
@@ -259,7 +295,8 @@ class ProfileFragment : Fragment() {
             }
             .addOnFailureListener { e ->
                 Log.e("PROFILE", "Upload failed: ${e.message}")
-                Toast.makeText(requireContext(), "Upload failed: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Upload failed: ${e.message}", Toast.LENGTH_LONG)
+                    .show()
             }
 
 

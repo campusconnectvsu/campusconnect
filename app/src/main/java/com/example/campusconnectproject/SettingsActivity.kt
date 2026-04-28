@@ -30,7 +30,7 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        binding.tbar.setNavigationOnClickListener {
+        binding.backBtn.setNavigationOnClickListener {
             finish()
         }
 

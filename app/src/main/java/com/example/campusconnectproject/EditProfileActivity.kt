@@ -19,7 +19,7 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Set up toolbar
-        binding.tbar.setNavigationOnClickListener {
+        binding.backBtn.setNavigationOnClickListener {
             finish()
         }
 

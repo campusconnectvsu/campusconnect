@@ -20,7 +20,7 @@ class PostsAdapter(private var posts: List<String>): RecyclerView.Adapter<PostsA
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostVHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_post, parent, false)
-        val size = parent.width / 3
+        val size = parent.context.resources.displayMetrics.widthPixels / 3
         view.layoutParams = RecyclerView.LayoutParams(size, size)
         return PostVHolder(view)
     }

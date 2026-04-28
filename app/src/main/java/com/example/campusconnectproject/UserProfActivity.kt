@@ -1,21 +1,23 @@
 package com.example.campusconnectproject
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-
 import com.example.campusconnectproject.databinding.ActivityUserProfBinding
-import com.bumptech.glide.Glide
-
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.content.Intent
+import android.view.LayoutInflater
+import android.view.View
+import com.google.android.material.bottomsheet.BottomSheetDialog
+
 
 class UserProfActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserProfBinding
     private val viewModel: UserProfViewModel by viewModels()
+    private var tar_U_Id: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,21 +31,27 @@ class UserProfActivity : AppCompatActivity() {
             insets
         }
 
-        val userId = intent.getStringExtra("USER_ID") ?: return
-        
-        setupObservers()
-        viewModel.checkInitialStatus(userId)
+        tar_U_Id = intent.getStringExtra("USER_ID") ?: return
+        binding.returnBtn.setOnClickListener { finish() }
+
 
         binding.followBtn.setOnClickListener {
-            if (binding.followBtn.text == getString(R.string.follow) || 
-                binding.followBtn.text == getString(R.string.following_label)) {
-                if (binding.followBtn.text == getString(R.string.following_label)) {
-                    showFollowOptions(userId)
-                } else {
-                    viewModel.toggleFollow(userId)
-                }
+            val isFollowing = viewModel.isFollowing.value == true
+            if (isFollowing) {
+                show_popup()
+            } else {
+                viewModel.toggleFollow(tar_U_Id)
             }
         }
+        binding.DmBtn.setOnClickListener {
+            val intent = Intent(this, ConversationActivity::class.java)
+            intent.putExtra("chat_name", viewModel.userName.value ?: "")
+            intent.putExtra("receiver_id", tar_U_Id)
+            startActivity(intent)
+        }
+
+        setupObservers()
+        viewModel.checkInitialStatus(tar_U_Id)
     }
 
     private fun setupObservers() {
@@ -52,36 +60,47 @@ class UserProfActivity : AppCompatActivity() {
         }
 
         viewModel.isFollowing.observe(this) { isFollowing ->
-            binding.followBtn.text = if (isFollowing) getString(R.string.following_label) else getString(R.string.follow)
+            binding.followBtn.text =
+                if (isFollowing) " Following ▾" else "Follow"
+            binding.DmBtn.visibility = if (isFollowing) View.VISIBLE else View.GONE
         }
 
         viewModel.followersCount.observe(this) { count ->
-            binding.followers.text = getString(R.string.followers_count, count)
+            binding.followers.text = count.toString()
         }
 
         viewModel.followingCount.observe(this) { count ->
-            binding.following.text = getString(R.string.following_count, count)
+            binding.following.text = count.toString()
         }
 
         viewModel.isBlocked.observe(this) { isBlocked ->
             if (isBlocked) finish()
         }
 
-        // Example of Glide usage (Requirement 4)
-        // viewModel.profileImageUrl.observe(this) { url ->
-        //     Glide.with(this).load(url).circleCrop().into(binding.profileImage)
-        // }
     }
 
-    private fun showFollowOptions(userId: String) {
-        val options = arrayOf(getString(R.string.unfollow), getString(R.string.block))
-        android.app.AlertDialog.Builder(this)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> viewModel.toggleFollow(userId)
-                    1 -> viewModel.blockUser(userId)
-                }
-            }
-            .show()
+    private fun show_popup() {
+        val sheet_log = BottomSheetDialog(this)
+        val sheet_popup =
+            LayoutInflater.from(this).inflate(R.layout.bottom_sheet_following_options, null)
+
+        sheet_popup.findViewById<TextView>(R.id.sProf_UserName)?.text =
+            viewModel.userName.value ?: ""
+
+        sheet_popup.findViewById<View>(R.id.unfollow_popup).setOnClickListener {
+            viewModel.toggleFollow(tar_U_Id)
+            sheet_log.dismiss()
+        }
+
+        sheet_popup.findViewById<View>(R.id.popup_Block).setOnClickListener {
+            viewModel.blockUser(tar_U_Id)
+            sheet_log.dismiss()
+        }
+
+        sheet_popup.findViewById<View>(R.id.cancel_popup).setOnClickListener {
+            sheet_log.dismiss()
+        }
+        sheet_log.setContentView(sheet_popup)
+        sheet_log.show()
     }
 }

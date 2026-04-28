@@ -4,14 +4,10 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/postImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/postImage"
         android:scaleType="centerCrop"
-        android:background="#E0E0E0">
-
-    </ImageView>
-
-
+        android:background="#E0E0E0" />
 
 </FrameLayout>

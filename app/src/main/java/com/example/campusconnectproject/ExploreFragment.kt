@@ -18,8 +18,13 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import android.content.Intent
-import androidx.fragment.app.setFragmentResult
+import android.util.Log
+import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
+
 
 class ExploreFragment : Fragment() {
 
@@ -30,6 +35,13 @@ class ExploreFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+
+    private var searchResultsC: View? = null
+    private var searchResultRe: RecyclerView? = null
+    private var searchReAdap: SearchResultsAdapter? = null
+    private var no_Res: TextView? = null
+    private var prof_Res: TextView? = null
+
 
     // Corrected VSU Campus Locations with High Precision Coordinates
     private val campusLocations = mapOf(
@@ -63,11 +75,31 @@ class ExploreFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_explore, container, false)
         _map = view.findViewById(R.id.map)
         searchView = view.findViewById(R.id.searchView)
+
+
+        searchResultsC = view.findViewById(R.id.search_Container)
+        searchResultRe = view.findViewById(R.id.search_ReView)
+        no_Res = view.findViewById(R.id.No_search)
+        prof_Res = view.findViewById(R.id.prof_acc)
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        searchReAdap = SearchResultsAdapter(emptyList())
+        searchResultRe?.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = searchReAdap
+            addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    DividerItemDecoration.VERTICAL
+                )
+            )
+        }
 
         view.post {
             if (_map == null) return@post
@@ -93,6 +125,7 @@ class ExploreFragment : Fragment() {
 
     private fun setupFab(view: View) {
         view.findViewById<FloatingActionButton>(R.id.fabCenter).setOnClickListener {
+            hide_Search()
             map.controller.animateTo(vsuPoint)
             map.controller.setZoom(17.5)
             map.overlays.clear()
@@ -102,15 +135,15 @@ class ExploreFragment : Fragment() {
 
     private fun setupChips(view: View) {
         view.findViewById<Chip>(R.id.chipLibrary)
-            .setOnClickListener { performCategorySearch("Library") }
+            .setOnClickListener { hide_Search(); performCategorySearch("Library") }
         view.findViewById<Chip>(R.id.chipDining)
-            .setOnClickListener { performCategorySearch("Dining") }
+            .setOnClickListener { hide_Search(); performCategorySearch("Dining") }
         view.findViewById<Chip>(R.id.chipAcademic)
-            .setOnClickListener { performCategorySearch("Academic") }
+            .setOnClickListener { hide_Search(); performCategorySearch("Academic") }
         view.findViewById<Chip>(R.id.chipResidence)
-            .setOnClickListener { performCategorySearch("Residence") }
+            .setOnClickListener { hide_Search(); performCategorySearch("Residence") }
         view.findViewById<Chip>(R.id.chipSports)
-            .setOnClickListener { performCategorySearch("Sports") }
+            .setOnClickListener { hide_Search(); performCategorySearch("Sports") }
     }
 
     private fun performCategorySearch(category: String) {
@@ -147,9 +180,20 @@ class ExploreFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                return false
+                if (newText.isNullOrBlank()) {
+                    hide_Search()
+                } else {
+                    search_Prof(newText.trim())
+                }
+                return true
             }
         })
+
+        searchView?.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (!hasFocus && searchView?.query.isNullOrBlank()) {
+                hide_Search()
+            }
+        }
     }
 
     private fun performSearch(query: String) {
@@ -180,33 +224,96 @@ class ExploreFragment : Fragment() {
 
             Toast.makeText(requireContext(), "Found: ${match.key}", Toast.LENGTH_SHORT).show()
         } else {
-            val currentUid = auth.currentUser?.uid ?: return
-            db.collection("users")
-                .orderBy("name")
-                .startAt(lowercaseQuery)
-                .endAt(lowercaseQuery + "\uf8ff")
-                .get()
-                .addOnSuccessListener { result ->
-                    val users = result.documents.filter { it.getString("uid") != currentUid }
-                    if (users.isEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            " No locations or people found",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        val uid = users[0].getString("uid") ?: return@addOnSuccessListener
-                        val intent = Intent(requireContext(), UserProfActivity::class.java)
-                        intent.putExtra("USER_ID", uid)
-                        startActivity(intent)
-                    }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(requireContext(), "Search failed", Toast.LENGTH_SHORT).show()
-                }
+            search_Prof(lowercaseQuery)
         }
     }
 
+    private fun search_Prof(query: String) {
+        val currentUid = auth.currentUser?.uid ?: return
+        val lowercaseQuery = query.lowercase().trim()
+
+        Log.d("EXPLORE_SEARCH", "searching Firestore for: '$lowercaseQuery'")
+        db.collection("users")
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d("EXPLORE_SEARCH", "Total docs in users collection: ${result.size()}")
+                result.documents.forEach { doc ->
+                    val uid = doc.getString("uid")
+                    val name = doc.getString("name")
+                    Log.d("EXPLORE_SEARCH", "Doc id=${doc.id} uid =$uid name=$name")
+                    Log.d(
+                        "EXPLORE_SEARCH", "name.lowercase()=${name?.lowercase()} " +
+                                "contains '$lowercaseQuery' = ${
+                                    name?.lowercase()?.contains(lowercaseQuery)
+                                }"
+                    )
+                    Log.d(
+                        "EXPLORE_SEARCH",
+                        "uid! = currentUid: $uid != $currentUid = ${uid != currentUid}"
+                    )
+                }
+
+                val searchUsers = result.documents
+                    .filter { doc ->
+                        val uid = doc.getString("uid") ?: return@filter false
+                        val name = doc.getString("name") ?: return@filter false
+                        uid != currentUid && name.lowercase().contains(lowercaseQuery)
+                    }
+                    .mapNotNull { doc ->
+                        val uid = doc.getString("uid") ?: return@mapNotNull null
+                        val name = doc.getString("name") ?: return@mapNotNull null
+                        SearchUser(uid = uid, name = name)
+                    }
+                    .toMutableList()
+                Log.d("EXPLORE_SEARCH", "Matched users: ${searchUsers.size}")
+                show_s_Res(searchUsers)
+
+                searchUsers.forEachIndexed { index, searchUser ->
+                    db.collection("users").document(searchUser.uid)
+                        .collection("followers")
+                        .get()
+                        .addOnSuccessListener { followers ->
+                            searchUsers[index]= searchUser.copy(followCount = followers.size())
+
+                            db.collection("users").document(currentUid)
+                                .collection("following").document(searchUser.uid)
+                                .get()
+                                .addOnSuccessListener { followDoc ->
+                                    searchUsers[index] = searchUsers[index].copy(
+                                        following = followDoc.exists()
+                                    )
+                                    searchReAdap?.update_prof(searchUsers.toList())
+                                }
+                        }
+                }
+
+            }
+            .addOnFailureListener { e->
+                Log.e("EXPLORE_SEARCH", "Firestore query failed: ${e.message}, e")
+                Toast.makeText(requireContext(), "Search failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun show_s_Res(users: List<SearchUser>){
+        searchReAdap?.update_prof(users)
+        searchResultsC?.visibility = View.VISIBLE
+
+        if ( users.isEmpty()){
+            prof_Res?.visibility = View.GONE
+            no_Res?.visibility = View.VISIBLE
+            searchResultRe?.visibility = View.GONE
+        } else {
+            prof_Res?.visibility = View.VISIBLE
+            no_Res?.visibility = View.GONE
+            searchResultRe?.visibility = View.VISIBLE
+        }
+
+
+}
+    private fun hide_Search(){
+        searchResultsC?.visibility = View.GONE
+        searchReAdap?.update_prof(emptyList())
+    }
     override fun onResume() {
         super.onResume()
         _map?.onResume()

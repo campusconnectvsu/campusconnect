@@ -19,9 +19,9 @@ class NotificationsActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(binding.tbar)
+        setSupportActionBar(binding.backBtn)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.tbar.setNavigationOnClickListener {
+        binding.backBtn.setNavigationOnClickListener {
             onBackPressed()
         }
     }
