@@ -93,7 +93,6 @@ class SearchResultsAdapter(
                 }
             }
 
-            batch.commit()
             notifyItemChanged(position)
         }
     }

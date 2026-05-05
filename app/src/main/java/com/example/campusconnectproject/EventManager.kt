@@ -24,4 +24,8 @@ object EventManager {
     fun isJoined(event: Event): Boolean {
         return _joinedEvents.value.orEmpty().any { it.title == event.title && it.date == event.date }
     }
+
+    fun  clearAll(){
+        _joinedEvents.value = emptyList()
+    }
 }

@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
+
     private lateinit var binding: ActivityLoginBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
@@ -28,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
+                            com.example.campusconnectproject.EventManager.clearAll()
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         } else {

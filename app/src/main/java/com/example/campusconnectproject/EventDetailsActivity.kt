@@ -53,6 +53,16 @@ class EventDetailsActivity : AppCompatActivity() {
                 EventManager.joinEvent(currentEvent)
                 Toast.makeText(this, "Joined: ${currentEvent.title}", Toast.LENGTH_SHORT).show()
                 updateButtonStates(currentEvent)
+
+                val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: return@setOnClickListener
+                NotificationsActivity.sendNotification(
+                    db = db,
+                    targetUid = uid,
+                    title = "Joined event: ${currentEvent.title}",
+                    body =  "${currentEvent.date} - ${currentEvent.location}",
+                    type = "event"
+                )
             }
 
             binding.btnReject.setOnClickListener {
