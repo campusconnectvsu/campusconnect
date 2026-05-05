@@ -29,7 +29,7 @@ class PrivacySettingsActivity : AppCompatActivity() {
         }
 
         // Set up the toolbar back navigation
-        binding.backBtn.setNavigationOnClickListener {
+        binding.returnBackBtn.setNavigationOnClickListener {
             finish()
         }
 

@@ -14,7 +14,7 @@
         android:layout_height="48dp">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/Av_pic"
+            android:id="@+id/pfp_Av_pic"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
@@ -32,7 +32,7 @@
         android:layout_marginStart="14dp">
 
         <TextView
-            android:id="@+id/display_username"
+            android:id="@+id/dis_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/colorOnSurface"
@@ -41,7 +41,7 @@
             tools:text="malikai_conyers" />
 
         <TextView
-            android:id="@+id/follow_Counter"
+            android:id="@+id/followers_C"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"

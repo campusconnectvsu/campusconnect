@@ -15,7 +15,7 @@
         android:background="#CCCCCC" />
 
     <TextView
-        android:id="@+id/sProf_UserName"
+        android:id="@+id/bottom_SProf_UserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -31,7 +31,7 @@
         android:background="#33000000" />
 
     <TextView
-        android:id="@+id/unfollow_popup"
+        android:id="@+id/unfollow_op_btn"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:gravity="center_vertical"
@@ -47,7 +47,7 @@
         android:background="#33000000" />
 
     <TextView
-        android:id="@+id/popup_Block"
+        android:id="@+id/popup_Block_op"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:gravity="center_vertical"
@@ -63,7 +63,7 @@
         android:background="#33000000" />
 
     <TextView
-        android:id="@+id/cancel_popup"
+        android:id="@+id/cancel_popup_op"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:gravity="center_vertical"

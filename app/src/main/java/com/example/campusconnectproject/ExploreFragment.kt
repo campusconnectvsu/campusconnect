@@ -77,10 +77,10 @@ class ExploreFragment : Fragment() {
         searchView = view.findViewById(R.id.searchView)
 
 
-        searchResultsC = view.findViewById(R.id.search_Container)
-        searchResultRe = view.findViewById(R.id.search_ReView)
-        no_Res = view.findViewById(R.id.No_search)
-        prof_Res = view.findViewById(R.id.prof_acc)
+        searchResultsC = view.findViewById(R.id.search_Card)
+        searchResultRe = view.findViewById(R.id.search_ResVList)
+        no_Res = view.findViewById(R.id.No_search_found)
+        prof_Res = view.findViewById(R.id.userProf_acc)
 
         return view
     }

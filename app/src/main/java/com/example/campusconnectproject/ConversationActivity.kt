@@ -9,6 +9,7 @@ import com.example.campusconnectproject.databinding.ActivityConversationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 
 class ConversationActivity : AppCompatActivity() {
 
@@ -38,12 +39,12 @@ class ConversationActivity : AppCompatActivity() {
         prof_Name = intent.getStringExtra("chat_name") ?: ""
         rece_Id = intent.getStringExtra("receiver_id") ?: ""
 
-        binding.chatName.text = prof_Name
-        binding.backBtn.setOnClickListener { finish() }
+        binding.uChatName.text = prof_Name
+        binding.returnBackBtn.setOnClickListener { finish() }
 
         val currentUid = auth.currentUser?.uid ?: return
         messeges_Id = if (currentUid < rece_Id) {
-            "${currentUid}_${currentUid}"
+            "${currentUid}_${rece_Id}"
         } else {
             "${rece_Id}_${currentUid}"
         }
@@ -52,8 +53,9 @@ class ConversationActivity : AppCompatActivity() {
         layoutManager.stackFromEnd = true
 
 
-        binding.conversationRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.conversationRecyclerView.layoutManager = layoutManager
         binding.conversationRecyclerView.adapter = adapter
+
 
         listenFor_Dms()
 
@@ -72,6 +74,17 @@ class ConversationActivity : AppCompatActivity() {
 
     private fun send_Dms(text: String? = null, imageUrl: String? = null) {
         val currentUid = auth.currentUser?.uid ?: return
+
+        db.collection("conversations").document(messeges_Id)
+            .set(
+                hashMapOf(
+                    "participants" to listOf(currentUid, rece_Id),
+                    "lastMessage" to (text ?: ""),
+                    "timestamp" to System.currentTimeMillis()
+                ),
+                SetOptions.merge()
+            )
+
         val Dms = hashMapOf(
             "text" to text,
             "imageUrl" to imageUrl,
@@ -79,15 +92,26 @@ class ConversationActivity : AppCompatActivity() {
             "receiverId" to rece_Id,
             "timestamp" to System.currentTimeMillis()
         )
+        db.collection("conversations").document(messeges_Id).collection("messages").add(Dms)
+        db. collection("users").document(currentUid).get()
+            .addOnSuccessListener { doc ->
+                val cur_UName = doc.getString("name")?.replaceFirstChar { it.uppercase() }
+                NotificationsActivity.sendNotification(
+                    db = db,
+                    targetUid = rece_Id,
+                    title = " New Message from $cur_UName",
+                    body = text?: "Sent you an image",
+                    type = "message"
+                )
+            }
 
-        db.collection("conversations").document(messeges_Id). collection("messages") .add(Dms)
     }
 
 
     private fun listenFor_Dms() {
         val currentUid = auth.currentUser?.uid ?: return
         db.collection("conversations").document(messeges_Id).collection("messages")
-            .orderBy("timeStamp", Query.Direction.ASCENDING)
+            .orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, _ ->
                 if (snapshot == null) return@addSnapshotListener
                 messages.clear()
@@ -100,7 +124,7 @@ class ConversationActivity : AppCompatActivity() {
                             isSent = senderId == currentUid,
                             senderId = senderId,
                             receiverId = doc.getString("receiverId") ?: "",
-                            timestamp = doc.getLong("timeStamp") ?: 0L
+                            timestamp = doc.getLong("timestamp") ?: 0L
 
                         )
                     )

@@ -29,11 +29,11 @@ class MessagesActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             // Only apply padding to the AppBarLayout instead of the whole root
-            binding.backBtn.setPadding(0, systemBars.top, 0, 0)
+            binding.returnBackBtn.setPadding(0, systemBars.top, 0, 0)
             insets
         }
 
-        binding.backBtn.setNavigationOnClickListener {
+        binding.returnBackBtn.setNavigationOnClickListener {
             finish()
         }
 

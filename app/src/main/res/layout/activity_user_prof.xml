@@ -19,7 +19,7 @@
             android:paddingHorizontal="8dp">
 
             <ImageButton
-                android:id="@+id/return_btn"
+                android:id="@+id/ivback_btn"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_arrow_back"
@@ -50,7 +50,7 @@
             android:gravity="center_vertical">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profile_pic"
+                android:id="@+id/user_pfp"
                 android:layout_width="86dp"
                 android:layout_height="86dp"
                 android:src="@drawable/ic_person"
@@ -74,7 +74,7 @@
                     android:gravity="center">
 
                     <TextView
-                        android:id="@+id/total_post"
+                        android:id="@+id/t_post_Count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -152,7 +152,7 @@
             android:gravity="center_vertical">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/follow_Btn"
+                android:id="@+id/follow_U_Btn"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="34dp"
@@ -167,7 +167,7 @@
                 app:strokeColor="#CCCCCC" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/Dm_Btn"
+                android:id="@+id/DmChat_Btn"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="34dp"
@@ -192,7 +192,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/post_grid"
+            android:id="@+id/rvPosts_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
@@ -200,7 +200,7 @@
 
 
         <LinearLayout
-            android:id="@+id/emptyPosts"
+            android:id="@+id/empty_U_Posts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

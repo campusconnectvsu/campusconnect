@@ -27,9 +27,9 @@ class SearchResultsAdapter(
     private val current_Uid = FirebaseAuth.getInstance().currentUser?.uid
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val ivAvatar: ShapeableImageView = view.findViewById(R.id.Av_pic)
-        val prof_UName: TextView = view.findViewById(R.id.display_username)
-        val prof_followerCount: TextView = view.findViewById(R.id.follow_Counter)
+        val ivAvatar: ShapeableImageView = view.findViewById(R.id.pfp_Av_pic)
+        val prof_UName: TextView = view.findViewById(R.id.dis_username)
+        val prof_followerCount: TextView = view.findViewById(R.id.followers_C)
         val follow_btn: MaterialButton = view.findViewById(R.id.follow_bn)
     }
 
@@ -71,11 +71,26 @@ class SearchResultsAdapter(
                 batch.delete(followers_Ref)
                 user.following = false
                 user.followCount = maxOf(0, user.followCount - 1 )
+                batch.commit()
             } else{
                 batch.set(following_Ref, hashMapOf("followed" to true))
                 batch.set(followers_Ref, hashMapOf("followed" to true))
                 user.following = true
                 user.followCount += 1
+                batch.commit().addOnSuccessListener {
+                    db.collection("users").document(cur).get()
+                        .addOnSuccessListener { doc ->
+                            val myName = doc.getString("name")
+                                ?.replaceFirstChar { it.uppercase() }?: "Someone"
+                            NotificationsActivity.sendNotification(
+                                db = db,
+                                targetUid = tar_Id,
+                                title = "$myName started following you",
+                                body = "Tap to view their profile",
+                                type = "follow"
+                            )
+                        }
+                }
             }
 
             batch.commit()

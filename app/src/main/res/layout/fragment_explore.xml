@@ -118,7 +118,7 @@
 
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/search_Container"
+            android:id="@+id/search_Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -134,7 +134,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/prof_acc"
+                    android:id="@+id/userProf_acc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="People"
@@ -147,7 +147,7 @@
                     android:paddingBottom="4dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_ReView"
+                    android:id="@+id/search_ResVList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxHeight="360dp"
@@ -156,7 +156,7 @@
                     tools:listitem="@layout/item_search_result" />
 
                 <TextView
-                    android:id="@+id/No_search"
+                    android:id="@+id/No_search_found"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

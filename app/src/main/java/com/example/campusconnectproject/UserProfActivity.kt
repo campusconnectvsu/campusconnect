@@ -32,10 +32,10 @@ class UserProfActivity : AppCompatActivity() {
         }
 
         tar_U_Id = intent.getStringExtra("USER_ID") ?: return
-        binding.returnBtn.setOnClickListener { finish() }
+        binding.ivbackBtn.setOnClickListener { finish() }
 
 
-        binding.followBtn.setOnClickListener {
+        binding.followUBtn.setOnClickListener {
             val isFollowing = viewModel.isFollowing.value == true
             if (isFollowing) {
                 show_popup()
@@ -43,7 +43,7 @@ class UserProfActivity : AppCompatActivity() {
                 viewModel.toggleFollow(tar_U_Id)
             }
         }
-        binding.DmBtn.setOnClickListener {
+        binding.DmChatBtn.setOnClickListener {
             val intent = Intent(this, ConversationActivity::class.java)
             intent.putExtra("chat_name", viewModel.userName.value ?: "")
             intent.putExtra("receiver_id", tar_U_Id)
@@ -60,9 +60,9 @@ class UserProfActivity : AppCompatActivity() {
         }
 
         viewModel.isFollowing.observe(this) { isFollowing ->
-            binding.followBtn.text =
+            binding.followUBtn.text =
                 if (isFollowing) " Following ▾" else "Follow"
-            binding.DmBtn.visibility = if (isFollowing) View.VISIBLE else View.GONE
+            binding.DmChatBtn.visibility = if (isFollowing) View.VISIBLE else View.GONE
         }
 
         viewModel.followersCount.observe(this) { count ->
@@ -84,20 +84,20 @@ class UserProfActivity : AppCompatActivity() {
         val sheet_popup =
             LayoutInflater.from(this).inflate(R.layout.bottom_sheet_following_options, null)
 
-        sheet_popup.findViewById<TextView>(R.id.sProf_UserName)?.text =
+        sheet_popup.findViewById<TextView>(R.id.bottom_SProf_UserName)?.text =
             viewModel.userName.value ?: ""
 
-        sheet_popup.findViewById<View>(R.id.unfollow_popup).setOnClickListener {
+        sheet_popup.findViewById<View>(R.id.unfollow_op_btn).setOnClickListener {
             viewModel.toggleFollow(tar_U_Id)
             sheet_log.dismiss()
         }
 
-        sheet_popup.findViewById<View>(R.id.popup_Block).setOnClickListener {
+        sheet_popup.findViewById<View>(R.id.popup_Block_op).setOnClickListener {
             viewModel.blockUser(tar_U_Id)
             sheet_log.dismiss()
         }
 
-        sheet_popup.findViewById<View>(R.id.cancel_popup).setOnClickListener {
+        sheet_popup.findViewById<View>(R.id.cancel_popup_op).setOnClickListener {
             sheet_log.dismiss()
         }
         sheet_log.setContentView(sheet_popup)

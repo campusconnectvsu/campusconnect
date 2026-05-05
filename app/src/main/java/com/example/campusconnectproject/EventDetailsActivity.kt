@@ -21,7 +21,7 @@ class EventDetailsActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.backBtn.setNavigationOnClickListener {
+        binding.returnBackBtn.setNavigationOnClickListener {
             finish()
         }
 

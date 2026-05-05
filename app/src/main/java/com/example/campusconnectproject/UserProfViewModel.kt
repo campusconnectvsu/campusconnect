@@ -79,32 +79,51 @@ class UserProfViewModel : ViewModel() {
         val isCurrentlyFollowing = _isFollowing.value ?: false
         val batch = db.batch()
 
-        val followingRef = db.collection("users").document(current).collection("following").document(targetId)
-        val followersRef = db.collection("users").document(targetId).collection("followers").document(current)
+        val followingRef =
+            db.collection("users").document(current).collection("following").document(targetId)
+        val followersRef =
+            db.collection("users").document(targetId).collection("followers").document(current)
 
         if (isCurrentlyFollowing) {
             batch.delete(followingRef)
             batch.delete(followersRef)
+            batch.commit()
         } else {
             batch.set(followingRef, hashMapOf("followed" to true))
             batch.set(followersRef, hashMapOf("followed" to true))
+            batch.commit().addOnSuccessListener {
+                db.collection("users").document(current).get()
+                    .addOnSuccessListener { doc ->
+                        val sender_userName = doc.getString("name")
+                            ?.replaceFirstChar { it.uppercase() } ?: "Someone"
+                        NotificationsActivity.sendNotification(
+                            db = db,
+                            targetUid = targetId,
+                            title = "$sender_userName started following you",
+                            body = "Tap to view their profile",
+                            type = "follow"
+                        )
+                    }
+            }
         }
 
         // The listeners will handle updating the UI once the batch is committed
-        batch.commit()
     }
 
     fun blockUser(targetId: String) {
         val current = curUserId ?: return
         val batch = db.batch()
 
-        val blockRef = db.collection("users").document(current).collection("blocked_users").document(targetId)
+        val blockRef =
+            db.collection("users").document(current).collection("blocked_users").document(targetId)
         batch.set(blockRef, hashMapOf("blocked" to true))
 
-        val followingRef = db.collection("users").document(current).collection("following").document(targetId)
+        val followingRef =
+            db.collection("users").document(current).collection("following").document(targetId)
         batch.delete(followingRef)
 
-        val followersRef = db.collection("users").document(targetId).collection("followers").document(current)
+        val followersRef =
+            db.collection("users").document(targetId).collection("followers").document(current)
         batch.delete(followersRef)
 
         batch.commit()

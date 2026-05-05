@@ -45,6 +45,7 @@ class ChatAdapter(private val chatList: List<Chat>) :
             val context = holder.itemView.context
             val intent = Intent(context, ConversationActivity::class.java)
             intent.putExtra("chat_name", chat.name)
+            intent.putExtra("receiver_id", chat.receiverId)
             context.startActivity(intent)
         }
     }
