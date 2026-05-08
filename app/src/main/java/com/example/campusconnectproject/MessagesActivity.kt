@@ -13,9 +13,13 @@ import androidx.appcompat.widget.SearchView
 
 class MessagesActivity : AppCompatActivity() {
 
+    // view binding to messages layout
     private lateinit var binding: ActivityMessagesBinding
+    // adapter for chats
     private lateinit var adapter: ChatAdapter
+    // adapter for online friends
     private lateinit var onlineAdapter: OnlineFriendAdapter
+    // list of all chats
     private var allChats = listOf<Chat>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +37,14 @@ class MessagesActivity : AppCompatActivity() {
             insets
         }
 
+
+
+        // back button
         binding.returnBackBtn.setNavigationOnClickListener {
             finish()
         }
 
+        // Recycler View Setup
         binding.recyclerViewChats.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewOnline.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
@@ -51,6 +59,7 @@ class MessagesActivity : AppCompatActivity() {
             Chat("Remote Guy", "here is your bill for the...", "Mar 10", R.drawable.ic_person, false)
         )
 
+        // bind data to recycler views
         adapter = ChatAdapter(allChats)
         binding.recyclerViewChats.adapter = adapter
 
@@ -58,7 +67,7 @@ class MessagesActivity : AppCompatActivity() {
         onlineAdapter = OnlineFriendAdapter(onlineFriends)
         binding.recyclerViewOnline.adapter = onlineAdapter
 
-        // --- Search Logic --- //
+        // Search Logic
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
@@ -68,12 +77,13 @@ class MessagesActivity : AppCompatActivity() {
             }
         })
 
-        // --- New Chat Button --- //
+        // New Chat Button
         binding.btnNewChat.setOnClickListener {
             Toast.makeText(this, "Start a new conversation!", Toast.LENGTH_SHORT).show()
         }
     }
 
+    // filter chats based on search
     private fun filterChats(query: String?) {
         val filteredList = if (query.isNullOrBlank()) {
             allChats

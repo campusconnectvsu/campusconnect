@@ -11,8 +11,11 @@ import com.google.firebase.firestore.Query
 
 class NotificationsActivity : AppCompatActivity() {
 
+    // binding for notifications layout
     private lateinit var binding: ActivityNotificationsBinding
+    // firebase instance
     private val db = FirebaseFirestore.getInstance()
+    // auth instance
     private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +27,7 @@ class NotificationsActivity : AppCompatActivity() {
         loadNotifications()
     }
 
+    // setup toolbar for back button
     private fun setupToolbar() {
         setSupportActionBar(binding.returnBackBtn)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -32,13 +36,17 @@ class NotificationsActivity : AppCompatActivity() {
         }
     }
 
+    // update notifications
     private fun loadNotifications() {
+        // get user id
         val uid = auth.currentUser?.uid?: return
+        // query for notifications
         db.collection("notifications").document(uid)
             .collection("items")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshots, error ->
                 if ( error != null || snapshots == null ) return@addSnapshotListener
+                // map firestore doc to notification
                 val notifications = snapshots.documents.mapNotNull { doc ->
                     NotificationModel(
                         id = doc.id,
@@ -49,8 +57,10 @@ class NotificationsActivity : AppCompatActivity() {
                         isRead = doc.getBoolean("isRead") ?: false
                     )
                 }
+                // bind the notifications to the recycler view
                 binding.notificationsRecyclerView.layoutManager = LinearLayoutManager(this)
                 binding.notificationsRecyclerView.adapter = NotificationAdapter(notifications)
+                // mark unread notification as read
                 for ( doc in snapshots.documents){
                     if (doc.getBoolean("isRead") == false ){
                         doc.reference.update("isRead", true)
@@ -62,6 +72,7 @@ class NotificationsActivity : AppCompatActivity() {
     }
 
     companion object{
+        // send notification to user
         fun sendNotification(
             db: FirebaseFirestore,
             targetUid: String,
@@ -69,6 +80,7 @@ class NotificationsActivity : AppCompatActivity() {
             body : String,
             type: String
         ){
+            // create and send notification data
             val noti_Data = hashMapOf("title" to title, "body" to body, "type" to type, "timestamp" to System.currentTimeMillis(),"isRead" to false)
             db.collection("notifications").document(targetUid)
                 .collection("items")

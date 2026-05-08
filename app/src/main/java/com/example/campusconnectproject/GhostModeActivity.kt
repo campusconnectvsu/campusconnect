@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class GhostModeActivity : AppCompatActivity() {
 
+    // switch for  turn on/off ghost mode
     private lateinit var swGhMode: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,7 @@ class GhostModeActivity : AppCompatActivity() {
     }
 
     private fun saveSetting(key: String, value: Boolean) {
+        // Save value to SharedPreferences
         val prefs = getSharedPreferences("privacy_settings", Context.MODE_PRIVATE)
         prefs.edit().putBoolean(key, value).apply()
         Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()

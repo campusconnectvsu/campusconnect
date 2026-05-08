@@ -1,5 +1,5 @@
 package com.example.campusconnectproject
-
+// data model for messages
 data class Message(
     val text: String? = null,
     val imageUrl: String? = null,

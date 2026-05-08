@@ -9,7 +9,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class EditProfileActivity : AppCompatActivity() {
 
+    // view binding for edit profile layout
     private lateinit var binding: ActivityEditProfileBinding
+
+    // firestore db instance and auth instance
     private val dat_sto = FirebaseFirestore.getInstance()
     private val fireauth = FirebaseAuth.getInstance()
 
@@ -24,6 +27,7 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
 
+        // get the current user
         val currentUser = fireauth.currentUser
         if (currentUser == null){
             finish()
@@ -31,10 +35,12 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
 
+        // store the user id and email
         val uid = currentUser.uid
         val email = currentUser.email?: ""
 
 
+        // load existing profile data
         dat_sto.collection("users").document(uid).get()
             .addOnSuccessListener { doc->
                 binding.etFullName.setText(doc.getString("name")?:"")
@@ -61,6 +67,7 @@ class EditProfileActivity : AppCompatActivity() {
             binding.btnSaveProfile.text = "Saving"
 
 
+            // updated map with user data
             val userMap = hashMapOf(
                 "uid" to uid,
                 "email" to email,
@@ -69,8 +76,7 @@ class EditProfileActivity : AppCompatActivity() {
 
             )
 
-
-
+            // save update to firestore
             dat_sto.collection("users").document(uid)
                 .set(userMap)
                 .addOnSuccessListener {

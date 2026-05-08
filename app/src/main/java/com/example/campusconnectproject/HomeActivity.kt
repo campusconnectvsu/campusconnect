@@ -12,14 +12,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.campusconnectproject.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
-
+    // view bindinf for home layout
     private lateinit var binding: ActivityHomeBinding
 
-    // --- Data Lists and Adapters --- //
+    //Data Lists and Adapters
     private val upcomingEvents = mutableListOf<Event>()
     private val currentEvents = mutableListOf<Event>()
     private val pastEvents = mutableListOf<Event>()
 
+    // Adapters for each recycler view
     private lateinit var upcomingEventsAdapter: EventAdapter
     private lateinit var currentEventsAdapter: EventAdapter
     private lateinit var pastEventsAdapter: EventAdapter
@@ -30,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
         // Enable Edge-to-Edge
         enableEdgeToEdge()
         
-        // --- View Binding Setup --- //
+        // View Binding Setup
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,23 +43,23 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
 
-        // --- Modern Back Handling --- //
+        // Modern Back Handling
         onBackPressedDispatcher.addCallback(this) {
             finish()
         }
 
-        // --- Navigation to Notifications --- //
+        // Navigation to Notifications
         binding.notificationBell.setOnClickListener {
             val intent = Intent(this, NotificationsActivity::class.java)
             startActivity(intent)
         }
 
-        // --- Setup All RecyclerViews --- //
+        // Setup All RecyclerViews
         setupRecyclerView(binding.upcomingEventsRecyclerView, upcomingEvents, true)
         setupRecyclerView(binding.currentEventsRecyclerView, currentEvents, false)
         setupRecyclerView(binding.pastEventsRecyclerView, pastEvents, false)
         
-        // --- Add Event Functionality --- //
+        // Add Event Functionality
         binding.fab.setOnClickListener {
             val newEvent = Event("New Campus Event", "Location to be decided", "20\nJUNE", R.drawable.vsu_logo)
             upcomingEvents.add(newEvent)

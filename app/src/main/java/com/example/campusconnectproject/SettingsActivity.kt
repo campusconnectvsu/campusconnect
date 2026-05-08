@@ -14,6 +14,7 @@ import com.example.campusconnectproject.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
+    // Binding for the setting activity layout
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,29 +25,36 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        // Set up system bar insets to prevent content overlapping
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // go back button
         binding.returnBackBtn.setNavigationOnClickListener {
             finish()
         }
 
+        // go to changed password screen
         binding.btnChangePassword.setOnClickListener {
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         }
 
+        // go to privacy settings screen
         binding.btnPrivacySettings.setOnClickListener {
             val intent = Intent(this, PrivacySettingsActivity::class.java)
             startActivity(intent)
         }
 
+        // switch for dark mode
         val isDarkMode = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
         binding.switchDarkMode.isChecked = isDarkMode
 
+        // switch to dark mode listener
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -56,14 +64,17 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
+        // placeholder for help center
         binding.btnHelpCenter.setOnClickListener {
             Toast.makeText(this, "Opening Help Center...", Toast.LENGTH_SHORT).show()
         }
 
+        // place holder for bug report
         binding.btnReportIssue.setOnClickListener {
             Toast.makeText(this, "Report an Issue screen coming soon!", Toast.LENGTH_SHORT).show()
         }
 
+        // show confirmation dialog before deleting account
         binding.btnDeleteAccount.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Delete Account")
@@ -76,6 +87,7 @@ class SettingsActivity : AppCompatActivity() {
                 .show()
         }
 
+        // logout button
         binding.btnLogout.setOnClickListener{
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this, com.example.campusconnectproject.loginsignup.LoginActivity::class.java)

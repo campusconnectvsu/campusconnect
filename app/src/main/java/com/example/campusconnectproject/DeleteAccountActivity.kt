@@ -12,8 +12,13 @@ import com.google.firebase.auth.FirebaseAuth
 
 class DeleteAccountActivity : AppCompatActivity() {
 
+
+    // input fields for user password
     private lateinit var del_Passwrd: EditText
+
+    // btn to delete account
     private lateinit var del_Ac: Button
+    // firebase auth instance
     private lateinit var fire_auth: FirebaseAuth
 
 
@@ -46,6 +51,7 @@ class DeleteAccountActivity : AppCompatActivity() {
 
     // delete account function
     private fun delete_acc() {
+        // get the currently signed in user
         val user = fire_auth.currentUser
         if (user != null) {
             user.delete().addOnCompleteListener { task ->

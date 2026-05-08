@@ -12,10 +12,12 @@ import java.util.Locale
 class NotificationAdapter(private val notifications: List<NotificationModel>) :
     RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
+        // view holder for notification item
     class NotificationViewHolder(val binding: ItemNotificationBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
+        // inflate view
         val binding = ItemNotificationBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -27,12 +29,15 @@ class NotificationAdapter(private val notifications: List<NotificationModel>) :
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
         val notification = notifications[position]
         holder.binding.apply {
+            // bind data to views
             notificationTitle.text = notification.title
             notificationBody.text = notification.body
-            
+
+            // format timestamp and date into string
             val sdf = SimpleDateFormat("h:mm a, MMM d", Locale.getDefault())
             notificationTime.text = sdf.format(Date(notification.timestamp))
-            
+
+            // show/hide dot based on read status
             unreadDot.visibility = if (notification.isRead) View.GONE else View.VISIBLE
             
             // Highlight based on type

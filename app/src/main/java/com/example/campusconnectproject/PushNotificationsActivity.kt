@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class PushNotificationsActivity : AppCompatActivity() {
 
+    // Declare UI elements
     private lateinit var messages: Switch
     private lateinit var events: Switch
     private lateinit var reminders: Switch
@@ -18,15 +19,16 @@ class PushNotificationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_push_notfication)
 
-        // Get SharedPreferences
+        // load saved preferences
         val prefs = getSharedPreferences("push_settings", Context.MODE_PRIVATE)
 
+        // bind switch elements to UI
         messages = findViewById(R.id.swiMessage)
         events = findViewById(R.id.swEvent)
         reminders = findViewById(R.id.swiReminders)
         system = findViewById(R.id.switchSystem)
 
-        // Load saved states
+        // Load saved settings
         messages.isChecked = prefs.getBoolean("messages", true)
         events.isChecked = prefs.getBoolean("events", true)
         reminders.isChecked = prefs.getBoolean("reminders", true)
@@ -50,6 +52,7 @@ class PushNotificationsActivity : AppCompatActivity() {
         }
     }
 
+    // save setting to shared preferences
     private fun saveSetting(key: String, value: Boolean) {
         val prefs = getSharedPreferences("push_settings", Context.MODE_PRIVATE)
         prefs.edit().putBoolean(key, value).apply()

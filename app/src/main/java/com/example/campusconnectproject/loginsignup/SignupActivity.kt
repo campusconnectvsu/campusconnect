@@ -12,8 +12,13 @@ import android.util.Log
 
 class SignupActivity : AppCompatActivity() {
 
+    // binding signup layout xml
     private lateinit var binding: ActivitySignupBinding
+
+    // firebase auth instance
     private lateinit var firebaseAuth: FirebaseAuth
+
+    // fireStore database instance
     private val db = FirebaseFirestore.getInstance()
 
 
@@ -22,24 +27,32 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance()
 
+        // handles signup function and btn clicks
         binding.signupButton.setOnClickListener {
             val name = binding.signupFullname.text.toString().trim()
             val email = binding.signupEmail.text.toString().trim()
             val password = binding.signupPassword.text.toString().trim()
             val confirmPassword = binding.signupConfirm.text.toString().trim()
 
+            // check if password is empty or not
             if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(this, " Fields can't be empty", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            // check if password are the same
             if (password != confirmPassword) {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // prevents multiple clicks
             binding.signupButton.isEnabled = false
 
+
+            // create user with email and password
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener { authResult ->
                     val uid = authResult.user?.uid
@@ -50,12 +63,15 @@ class SignupActivity : AppCompatActivity() {
                         return@addOnSuccessListener
                     }
                     Log.d("SINGUP", "Auth success uid=$uid, writing to firestore...")
+
+                    // store user data into firestore db
                     val u_Map = hashMapOf(
                         "uid" to uid,
                         "name" to name.lowercase(),
                         "email" to email
                     )
 
+                    // save profile to firebase
                     db.collection("users").document(uid)
                         .set(u_Map)
                         .addOnSuccessListener {
@@ -63,6 +79,7 @@ class SignupActivity : AppCompatActivity() {
                             Toast.makeText(this, "Signup successfully", Toast.LENGTH_SHORT).show()
 
 
+                            // sign out and go back to login page
                             firebaseAuth.signOut()
                             val intent = Intent(this, LoginActivity::class.java)
                             intent.flags =
@@ -87,6 +104,7 @@ class SignupActivity : AppCompatActivity() {
 
                 }
         }
+        // go back to login page
         binding.LoginRedirectText.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }

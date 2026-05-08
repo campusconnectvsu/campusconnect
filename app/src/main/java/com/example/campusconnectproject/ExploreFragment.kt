@@ -28,18 +28,27 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ExploreFragment : Fragment() {
 
+    // nullable map reference
     private var _map: MapView? = null
     private val map get() = _map!!
+    // search bar
     private var searchView: SearchView? = null
+    // center the map to vsu campus
     private val vsuPoint = GeoPoint(37.2343, -77.4191)
 
+    // firestore db instance
     private val db = FirebaseFirestore.getInstance()
+    // auth instance
     private val auth = FirebaseAuth.getInstance()
-
+    // container for search result list
     private var searchResultsC: View? = null
+    // Recycler View of result card
     private var searchResultRe: RecyclerView? = null
+    // adapter for search result list
     private var searchReAdap: SearchResultsAdapter? = null
+    // show no results when noting is found
     private var no_Res: TextView? = null
+    // label search results
     private var prof_Res: TextView? = null
 
 
@@ -69,14 +78,16 @@ class ExploreFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // config before mapview is used
         Configuration.getInstance()
             .load(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))
 
         val view = inflater.inflate(R.layout.fragment_explore, container, false)
+        // bind map and search bar views
         _map = view.findViewById(R.id.map)
         searchView = view.findViewById(R.id.searchView)
 
-
+        // bind search result views
         searchResultsC = view.findViewById(R.id.search_Card)
         searchResultRe = view.findViewById(R.id.search_ResVList)
         no_Res = view.findViewById(R.id.No_search_found)
@@ -89,6 +100,7 @@ class ExploreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        // set up the search result recyclerView
         searchReAdap = SearchResultsAdapter(emptyList())
         searchResultRe?.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -101,17 +113,22 @@ class ExploreFragment : Fragment() {
             )
         }
 
+        // defer map setup
         view.post {
             if (_map == null) return@post
 
+            // use OpenStreet map tiles
             map.setTileSource(TileSourceFactory.MAPNIK)
             map.setMultiTouchControls(true)
+            // scale titles to match screen
             map.isTilesScaledToDpi = true
             map.tilesScaleFactor = 1.3f
 
+            // center the map to canvas
             map.controller.setZoom(17.5)
             map.controller.setCenter(vsuPoint)
 
+            // restrict map to vsu campus
             val vsuBounds = BoundingBox(37.2500, -77.4000, 37.2200, -77.4400)
             map.setScrollableAreaLimitDouble(vsuBounds)
             map.minZoomLevel = 14.0
@@ -123,6 +140,7 @@ class ExploreFragment : Fragment() {
         }
     }
 
+    // clear and rest map
     private fun setupFab(view: View) {
         view.findViewById<FloatingActionButton>(R.id.fabCenter).setOnClickListener {
             hide_Search()
@@ -133,6 +151,7 @@ class ExploreFragment : Fragment() {
         }
     }
 
+    // map marker matches category
     private fun setupChips(view: View) {
         view.findViewById<Chip>(R.id.chipLibrary)
             .setOnClickListener { hide_Search(); performCategorySearch("Library") }
@@ -146,6 +165,7 @@ class ExploreFragment : Fragment() {
             .setOnClickListener { hide_Search(); performCategorySearch("Sports") }
     }
 
+    // place marker for all location in category
     private fun performCategorySearch(category: String) {
         map.overlays.clear()
 
@@ -158,6 +178,7 @@ class ExploreFragment : Fragment() {
             map.overlays.add(marker)
         }
 
+        // pan to first result if marker were added
         if (map.overlays.isNotEmpty()) {
             val firstMatch = (map.overlays[0] as Marker).position
             map.controller.animateTo(firstMatch)
@@ -169,8 +190,10 @@ class ExploreFragment : Fragment() {
         map.invalidate()
     }
 
+    // attach listeners to search Bar
     private fun setupSearch() {
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            // search campus building
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null && query.isNotEmpty()) {
                     performSearch(query)
@@ -179,6 +202,7 @@ class ExploreFragment : Fragment() {
                 return true
             }
 
+            // show search results while still searching
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrBlank()) {
                     hide_Search()
@@ -189,6 +213,7 @@ class ExploreFragment : Fragment() {
             }
         })
 
+        // hide results when search loses focus
         searchView?.setOnQueryTextFocusChangeListener { _, hasFocus ->
             if (!hasFocus && searchView?.query.isNullOrBlank()) {
                 hide_Search()
@@ -196,6 +221,7 @@ class ExploreFragment : Fragment() {
         }
     }
 
+    // search campus location by name
     private fun performSearch(query: String) {
         val lowercaseQuery = query.lowercase().trim()
 
@@ -228,6 +254,7 @@ class ExploreFragment : Fragment() {
         }
     }
 
+    // search firestore users by name
     private fun search_Prof(query: String) {
         val currentUid = auth.currentUser?.uid ?: return
         val lowercaseQuery = query.lowercase().trim()
@@ -253,6 +280,7 @@ class ExploreFragment : Fragment() {
                     )
                 }
 
+                // filter profiles based on search query
                 val searchUsers = result.documents
                     .filter { doc ->
                         val uid = doc.getString("uid") ?: return@filter false
@@ -268,13 +296,14 @@ class ExploreFragment : Fragment() {
                 Log.d("EXPLORE_SEARCH", "Matched users: ${searchUsers.size}")
                 show_s_Res(searchUsers)
 
+                // search result shows follower count and status
                 searchUsers.forEachIndexed { index, searchUser ->
                     db.collection("users").document(searchUser.uid)
                         .collection("followers")
                         .get()
                         .addOnSuccessListener { followers ->
                             searchUsers[index]= searchUser.copy(followCount = followers.size())
-
+                            // check if current user already follows the profile
                             db.collection("users").document(currentUid)
                                 .collection("following").document(searchUser.uid)
                                 .get()
@@ -294,6 +323,7 @@ class ExploreFragment : Fragment() {
             }
     }
 
+    // shows result cards and toggles
     private fun show_s_Res(users: List<SearchUser>){
         searchReAdap?.update_prof(users)
         searchResultsC?.visibility = View.VISIBLE
@@ -310,6 +340,7 @@ class ExploreFragment : Fragment() {
 
 
 }
+    // hide search result card and clear adapter
     private fun hide_Search(){
         searchResultsC?.visibility = View.GONE
         searchReAdap?.update_prof(emptyList())

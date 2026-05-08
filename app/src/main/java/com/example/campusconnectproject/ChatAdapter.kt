@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ChatAdapter(private val chatList: List<Chat>) :
     RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
+        // holder for chat items
     class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageProfile: ImageView = view.findViewById(R.id.imageProfile)
         val textName: TextView = view.findViewById(R.id.textName)
@@ -20,20 +21,24 @@ class ChatAdapter(private val chatList: List<Chat>) :
         val unreadCount: TextView = view.findViewById(R.id.unreadCount)
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
+        // inflate chat item layout
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_chat, parent, false)
         return ChatViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
+        // bind chat data to view
         val chat = chatList[position]
         holder.textName.text = chat.name
         holder.textMessage.text = chat.message
         holder.textTime.text = chat.time
         holder.imageProfile.setImageResource(chat.imageResId)
         holder.onlineDot.visibility = if (chat.isOnline) View.VISIBLE else View.GONE
-        
+
+        // show unread badge when there are unread Msgs
         if (chat.unreadCount > 0) {
             holder.unreadCount.visibility = View.VISIBLE
             holder.unreadCount.text = chat.unreadCount.toString()
@@ -41,6 +46,7 @@ class ChatAdapter(private val chatList: List<Chat>) :
             holder.unreadCount.visibility = View.GONE
         }
 
+        // open the messages screen when click
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, ConversationActivity::class.java)

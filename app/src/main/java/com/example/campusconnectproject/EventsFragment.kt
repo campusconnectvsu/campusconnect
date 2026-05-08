@@ -15,14 +15,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
 
 class EventsFragment : Fragment() {
-
+    // view binding events layout
     private var _binding: FragmentEventsBinding? = null
     private val binding get() = _binding!!
 
+    // Firestore db instance
     private val fireB_db = FirebaseFirestore.getInstance()
+    // auth instance
     private val auth = FirebaseAuth.getInstance()
     
-    // This pool will be shared between all three RecyclerViews
+    // view pool will be shared between all three RecyclerViews
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateView(
@@ -37,6 +39,7 @@ class EventsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Open notification when bell is clicked
         binding.notificationBell.setOnClickListener {
             val intent = Intent(requireContext(), NotificationsActivity::class.java)
             startActivity(intent)
@@ -63,16 +66,16 @@ class EventsFragment : Fragment() {
         binding.upcomingEventsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = EventAdapter(upcomingEvents)
-            setRecycledViewPool(viewPool) // Optimization
-            setHasFixedSize(true)         // Optimization
+            setRecycledViewPool(viewPool)
+            setHasFixedSize(true)
         }
 
         // Setup Current RecyclerView
         binding.currentEventsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = EventAdapter(currentEvents)
-            setRecycledViewPool(viewPool) // Optimization
-            setHasFixedSize(true)         // Optimization
+            setRecycledViewPool(viewPool)
+            setHasFixedSize(true)
         }
 
         // Setup Past RecyclerView
@@ -83,7 +86,7 @@ class EventsFragment : Fragment() {
             setHasFixedSize(true)         // Optimization
         }
 
-        // Observe EventManager to refresh UI when joining/leaving events
+        // refresh UI when joining/leaving events
         EventManager.joinedEvents.observe(viewLifecycleOwner) {
             binding.upcomingEventsRecyclerView.adapter?.notifyDataSetChanged()
             binding.currentEventsRecyclerView.adapter?.notifyDataSetChanged()
@@ -102,14 +105,18 @@ class EventsFragment : Fragment() {
         }
     }
 
+    // Opens AllEvents based on category selection
     private fun openAllEvents(category: String) {
         val intent = Intent(requireContext(), AllEventsActivity::class.java)
         intent.putExtra("CATEGORY", category)
         startActivity(intent)
     }
 
+    // listen for unread notifications
     private fun Unread_Noti(){
+        // get current users UID
         val uid = auth.currentUser?.uid?: return
+        // listen for unread notifications
         fireB_db.collection("notifications").document(uid)
             .collection("items")
             .whereEqualTo("isRead", false)
@@ -119,6 +126,8 @@ class EventsFragment : Fragment() {
                     return@addSnapshotListener
                 }
                 Log.d("Bell", "Snapshot size: ${snapshots?.size()}")
+
+                // guard against callbacks when view is destroyed
                 if (_binding == null) return@addSnapshotListener
                 val hasUnread =(snapshots?.size() ?:0) >0
                 binding.notificationBell.imageTintList = android.content.res.ColorStateList.valueOf(
@@ -128,6 +137,7 @@ class EventsFragment : Fragment() {
             }
     }
 
+    // prevents memory leaks
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

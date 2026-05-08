@@ -11,9 +11,11 @@ import com.example.campusconnectproject.databinding.ItemEventBinding
 class EventAdapter(initialList: List<Event>? = null) : ListAdapter<Event, EventAdapter.EventViewHolder>(EventDiffCallback()) {
 
     init {
+        // submit default list to adapter
         initialList?.let { submitList(it) }
     }
 
+    // compares events for changes
     class EventDiffCallback : DiffUtil.ItemCallback<Event>() {
         override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
             // Ideally, use a unique ID here (like a Firestore document ID)
@@ -25,7 +27,9 @@ class EventAdapter(initialList: List<Event>? = null) : ListAdapter<Event, EventA
         }
     }
 
+    // holder for event items
     inner class EventViewHolder(val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
+        // binds data to card view
         fun bind(event: Event) {
             binding.eventImage.setImageResource(event.imageResId)
             binding.eventDate.text = event.date
@@ -33,6 +37,7 @@ class EventAdapter(initialList: List<Event>? = null) : ListAdapter<Event, EventA
             binding.eventLocation.text = event.location
 
             val context = itemView.context
+            // change btn based on join status
             if (EventManager.isJoined(event)) {
                 binding.viewDetailsButton.text = "Joined"
                 binding.viewDetailsButton.setTextColor(context.getColor(R.color.white))
@@ -77,6 +82,7 @@ class EventAdapter(initialList: List<Event>? = null) : ListAdapter<Event, EventA
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+        // inflate card view
         val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return EventViewHolder(binding)
     }

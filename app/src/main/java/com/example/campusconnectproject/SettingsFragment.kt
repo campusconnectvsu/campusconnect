@@ -47,41 +47,37 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         // LOGOUT
         setRowLabel(R.id.ro_logout, "Logout")
 
-        // Click listeners
+        // go to change password screen
         view.findViewById<LinearLayout>(R.id.ro_change_passwrd).setOnClickListener {
             startActivity(Intent(requireActivity(), ChangePasswordActivity::class.java))
         }
 
-
-
+        // go to delete account screen
         view.findViewById<LinearLayout>(R.id.ro_delete_acc).setOnClickListener {
             startActivity(Intent(requireActivity(), DeleteAccountActivity::class.java))
         }
 
-
+        // go to push notification screen
         view.findViewById<LinearLayout>(R.id.ro_push_notifi).setOnClickListener {
             startActivity(Intent(requireActivity(), PushNotificationsActivity::class.java))
         }
 
-
-
+        // go to ghost mode screen
         view.findViewById<LinearLayout>(R.id.ro_Gmode).setOnClickListener {
             startActivity(Intent(requireActivity(), GhostModeActivity::class.java))
         }
 
-
-
+        // go to about app screen
         view.findViewById<LinearLayout>(R.id.ro_about_app).setOnClickListener {
             startActivity(Intent(requireActivity(), AboutAppActivity::class.java))
         }
 
-
+        // go to terms and conditions screen
         view.findViewById<LinearLayout>(R.id.ro_terms_conditions).setOnClickListener {
             startActivity(Intent(requireActivity(), TermsConditionsActivity::class.java))
         }
 
-
-
+        // go to login screen
         view.findViewById<LinearLayout>(R.id.ro_logout).setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(requireActivity(), com.example.campusconnectproject.loginsignup.LoginActivity::class.java)

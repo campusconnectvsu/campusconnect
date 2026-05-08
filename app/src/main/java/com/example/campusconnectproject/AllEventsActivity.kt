@@ -7,6 +7,7 @@ import com.example.campusconnectproject.databinding.ActivityAllEventsBinding
 
 class AllEventsActivity : AppCompatActivity() {
 
+    // binding all event layout xml
     private lateinit var binding: ActivityAllEventsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,12 +15,14 @@ class AllEventsActivity : AppCompatActivity() {
         binding = ActivityAllEventsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // get categ intent from previous page
         val category = intent.getStringExtra("CATEGORY") ?: "Events"
         binding.headerTitle.text = category
 
+        // go back to previous page
         binding.backButton.setOnClickListener { finish() }
 
-        // Get dummy data based on category (In a real app, this comes from Firestore)
+        // load event based on categ selection
         val events = when (category) {
             "Upcoming Events" -> listOf(
                 Event("International Band Mu...", "Foster Hall, Basement", "10 JUNE", R.drawable.vsu_logo),
@@ -36,6 +39,7 @@ class AllEventsActivity : AppCompatActivity() {
             )
         }
 
+        // setup recycler view
         binding.allEventsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@AllEventsActivity)
             adapter = EventAdapter(events)

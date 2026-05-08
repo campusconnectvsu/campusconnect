@@ -21,13 +21,17 @@ import com.google.firebase.firestore.Source
 
 class MessagesFragment : Fragment() {
 
+    // view binding messages layout
     private var _binding: FragmentMessagesBinding? = null
     private val binding get() = _binding!!
 
+    // adapter for chat list and online friends
     private lateinit var adapter: ChatAdapter
     private lateinit var onlineAdapter: OnlineFriendAdapter
+    // full list of chats
     private var allChats = listOf<Chat>()
 
+    // firestore db instance and auth instance
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -47,29 +51,35 @@ class MessagesFragment : Fragment() {
         loadRalConversations()
         setupSearch()
 
+        // hide online friends recycler view and show new message button
         binding.recyclerViewOnline.visibility = View.GONE
         binding.btnNewChat.setOnClickListener {
             showNewMessageBottomSheet()
         }
     }
 
+    // show bottom sheet for new message
     private fun showNewMessageBottomSheet() {
+        // get current user UID
         val currentUid = auth.currentUser?.uid ?: return
         val dialog = BottomSheetDialog(requireContext())
         val sheetView = LayoutInflater.from(requireContext())
             .inflate(R.layout.bottom_sheet_new_message, null)
 
+        // setup recycler view for following
         val recyclerView = sheetView.findViewById<RecyclerView>(R.id.following_RV)
         val emptyText = sheetView.findViewById<TextView>(R.id.empty_Text)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // fetch following list from Firestore
         db.collection("users").document(currentUid)
             .collection("following")
             .get()
             .addOnSuccessListener { followingSnapshot ->
                 val following_uid_List = followingSnapshot.documents.map { it.id }
 
+                // if not following, show empty text
                 if (following_uid_List.isEmpty()) {
                     emptyText.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
@@ -77,15 +87,18 @@ class MessagesFragment : Fragment() {
                     return@addOnSuccessListener
                 }
 
+                // fetch following profiles from Firestore
                 val followed_prof_List = mutableListOf<User>()
                 var otherUIds = following_uid_List.size
 
+                // fetch each following profile and add to list
                 for (uid in following_uid_List) {
                     db.collection("users").document(uid).get()
                         .addOnSuccessListener { userDoc ->
                             val name = userDoc.getString("name") ?: uid
                             followed_prof_List.add(User(uid = uid, name = name))
                             otherUIds--
+                            // Build and attach adapter to recycler view
                             if (otherUIds == 0) {
                                 recyclerView.adapter =
                                     object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -103,6 +116,7 @@ class MessagesFragment : Fragment() {
                                             parent: ViewGroup,
                                             viewType: Int
                                         ): RecyclerView.ViewHolder {
+                                            // inflate the new message user layout
                                             val v = LayoutInflater.from(parent.context)
                                                 .inflate(
                                                     R.layout.item_new_message_user,
@@ -116,7 +130,9 @@ class MessagesFragment : Fragment() {
                                             holder: RecyclerView.ViewHolder,
                                             position: Int
                                         ) {
+                                            // bind user data to view
                                             val user = followed_prof_List[position]
+                                            // capitalize first letter of name
                                             (holder as UserViewHolder).nameText.text =
                                                 user.name.replaceFirstChar { it.uppercase() }
                                             holder.sayHiBtn.setOnClickListener {
@@ -152,6 +168,7 @@ class MessagesFragment : Fragment() {
     }
 
 
+    // Dismisses the sheet and opens a dms with the user
     private fun openConversation(dialog: BottomSheetDialog, user: User) {
         dialog.dismiss()
         val intent = Intent(requireContext(), ConversationActivity::class.java)
@@ -161,11 +178,14 @@ class MessagesFragment : Fragment() {
     }
 
 
+    // sets up recycler views for chat
     private fun setupRecyclerViews() {
         binding.recyclerViewChats.layoutManager = LinearLayoutManager(context)
     }
 
+    // fetches conversations from Firestore and sets up chat list
     private fun loadRalConversations() {
+        // get current user UID
         val currentUid = auth.currentUser?.uid ?: return
         db.collection("conversations")
             .get(Source.SERVER)
@@ -173,6 +193,7 @@ class MessagesFragment : Fragment() {
                 val chats = mutableListOf<Chat>()
                 var pending = result.size()
 
+                // Show an empty list if there are no conversations
                 if (pending == 0) {
                     showChats(chats)
                     return@addOnSuccessListener
@@ -180,18 +201,21 @@ class MessagesFragment : Fragment() {
 
                 for (doc in result.documents) {
                     val conversationId = doc.id
+                    // Skip conversations that don't belong to the current user
                     if (!conversationId.contains(currentUid)) {
                         pending--
                         if (pending == 0) showChats(chats)
                         continue
                     }
 
+                    // Derive the other user's UID from the conversation ID
                     val otherUid = if (conversationId.startsWith(currentUid)) {
                         conversationId.removePrefix(currentUid + "_")
                     } else {
                         conversationId.removeSuffix("_" + currentUid)
                     }
 
+                    // fetch last message
                     db.collection("conversations").document(conversationId)
                         .collection("messages")
                         .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -202,6 +226,7 @@ class MessagesFragment : Fragment() {
                             val lastText = lastMessage?.getString("text") ?: ""
                             val lastTime = lastMessage?.getLong("timestamp") ?: 0L
 
+                            // format time stamp or leave empty if no messages
                             val timeStr = if (lastTime > 0) {
                                 val sdf = java.text.SimpleDateFormat(
                                     "h:mm a",
@@ -210,6 +235,7 @@ class MessagesFragment : Fragment() {
                                 sdf.format(java.util.Date(lastTime))
                             } else ""
 
+                            // fetch other user's name
                             db.collection("users").document(otherUid).get()
                                 .addOnSuccessListener { userDoc ->
                                     val name = userDoc.getString("name") ?: otherUid
@@ -243,12 +269,14 @@ class MessagesFragment : Fragment() {
             }
     }
 
+    // sorts and shows chats
     private fun showChats(chats: List<Chat>){
         allChats = chats.sortedByDescending { it.time }
         adapter = ChatAdapter(allChats)
         binding.recyclerViewChats.adapter = adapter
     }
 
+    // sets up search bar to filter chats list by name
     private fun setupSearch() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
@@ -260,6 +288,7 @@ class MessagesFragment : Fragment() {
         })
     }
 
+    // filters chats based on search query
     private fun filterChats(query: String?) {
         val filteredList = if (query.isNullOrBlank()) {
             allChats
@@ -269,11 +298,13 @@ class MessagesFragment : Fragment() {
         binding.recyclerViewChats.adapter = ChatAdapter(filteredList)
     }
 
+    // refresh chats when returning to fragment
     override fun onResume() {
         super.onResume()
         loadRalConversations()
     }
 
+    // nullify binding
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -11,20 +11,26 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+// view type for sent and received messages
 private const val VIEW_TYPE_SENT = 1
 private const val VIEW_TYPE_RECEIVED = 2
 
+// adapter to display messages
 class ConversationAdapter(private var messages: List<Message>) :
     RecyclerView.Adapter<ConversationAdapter.MessageViewHolder>() {
 
+        // share time formatter
     private val timeFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
 
+    // holder for message items
     class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val messageText: TextView = view.findViewById(R.id.messageText)
         val messageImage: ImageView = view.findViewById(R.id.messageImage)
         val messageTime: TextView = view.findViewById(R.id.messageTime)
     }
 
+
+    // return the correct view type
     override fun getItemViewType(position: Int): Int {
         return if (messages[position].isSent) {
             VIEW_TYPE_SENT
@@ -33,6 +39,7 @@ class ConversationAdapter(private var messages: List<Message>) :
         }
     }
 
+    //inflate the correct layout based on view type
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val view = if (viewType == VIEW_TYPE_SENT) {
             LayoutInflater.from(parent.context)
@@ -51,6 +58,7 @@ class ConversationAdapter(private var messages: List<Message>) :
         val timeString = timeFormatter.format(Date(if (message.timestamp == 0L) System.currentTimeMillis() else message.timestamp))
         holder.messageTime.text = timeString
 
+        // show image or text
         if (message.imageUrl != null) {
             holder.messageImage.visibility = View.VISIBLE
             holder.messageText.visibility = View.GONE
@@ -67,8 +75,8 @@ class ConversationAdapter(private var messages: List<Message>) :
 
     override fun getItemCount() = messages.size
 
+    // replace and refresh messages
     fun updateMessages(newMessages: List<Message>) {
-        // In a real app, use DiffUtil here for even better performance
         this.messages = newMessages
         notifyDataSetChanged()
     }

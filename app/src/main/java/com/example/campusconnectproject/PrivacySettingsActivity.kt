@@ -33,7 +33,7 @@ class PrivacySettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        // --- Switch Listeners --- //
+        //Switch Listeners
         binding.switchPrivateProfile.setOnCheckedChangeListener { _, isChecked ->
             val message = if (isChecked) "Profile is now Private" else "Profile is now Public"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -44,7 +44,7 @@ class PrivacySettingsActivity : AppCompatActivity() {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
-        // --- Button Listeners --- //
+        // Button Listeners
         binding.btnBlockedAccounts.setOnClickListener {
             Toast.makeText(this, "Opening Blocked Accounts list...", Toast.LENGTH_SHORT).show()
         }

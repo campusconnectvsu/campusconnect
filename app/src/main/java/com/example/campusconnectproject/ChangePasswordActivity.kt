@@ -9,7 +9,11 @@ import com.google.firebase.auth.FirebaseAuth
 
 class ChangePasswordActivity : AppCompatActivity() {
 
+
+    // binding change password layout xml
     private lateinit var binding: ActivityChangePasswordBinding
+
+    // firebase auth instance
     private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,27 +21,36 @@ class ChangePasswordActivity : AppCompatActivity() {
         binding = ActivityChangePasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // get firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance()
 
+
+        // return to previous screen
         binding.returnBackBtn.setNavigationOnClickListener {
             finish()
         }
 
+
+        // handle update password btn click
         binding.btnUpdatePassword.setOnClickListener {
             val currentPassword = binding.etCurrentPassword.text.toString()
             val newPassword = binding.etNewPassword.text.toString()
             val confirmPassword = binding.etConfirmPassword.text.toString()
 
+            // check if all password fields are filled
             if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // check if new passwords match
             if (newPassword != confirmPassword) {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+
+            // check if new password is at least 6 characters
             if (newPassword.length < 6) {
                 Toast.makeText(this, "Password should be at least 6 characters", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -47,14 +60,19 @@ class ChangePasswordActivity : AppCompatActivity() {
         }
     }
 
+    // update password function
     private fun updatePassword(currentPassword: String, newPassword: String) {
+
+        // get currently signed in user
         val user = firebaseAuth.currentUser
         if (user != null && user.email != null) {
+            // build credential with current password and email
             val credential = EmailAuthProvider.getCredential(user.email!!, currentPassword)
 
             // Re-authenticate user before sensitive operation
             user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
                 if (reauthTask.isSuccessful) {
+                    // update password
                     user.updatePassword(newPassword).addOnCompleteListener { updateTask ->
                         if (updateTask.isSuccessful) {
                             Toast.makeText(this, "Password updated successfully", Toast.LENGTH_SHORT).show()

@@ -13,18 +13,24 @@ import com.google.firebase.firestore.SetOptions
 
 class ConversationActivity : AppCompatActivity() {
 
+    // Binding for the conversation layout
     private lateinit var binding: ActivityConversationBinding
-
-
+    // Firestore db instance
     private val db = FirebaseFirestore.getInstance()
+    // Firebase auth instance
     private val auth = FirebaseAuth.getInstance()
-
+    // List of messages
     private val messages = mutableListOf<Message>()
+    // adapter for message list
     private lateinit var adapter: ConversationAdapter
+    // names of users
     private var prof_Name: String = ""
+    // ids of receiver
     private var rece_Id: String = ""
+    // id of conversation
     private var messeges_Id: String = ""
 
+    // Launcher for image selection
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let { send_Dms(imageUrl = it.toString()) }
@@ -35,30 +41,32 @@ class ConversationActivity : AppCompatActivity() {
         binding = ActivityConversationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        // get other users names and ids from intent
         prof_Name = intent.getStringExtra("chat_name") ?: ""
         rece_Id = intent.getStringExtra("receiver_id") ?: ""
 
         binding.uChatName.text = prof_Name
         binding.returnBackBtn.setOnClickListener { finish() }
 
+        // get current user UID
         val currentUid = auth.currentUser?.uid ?: return
+        // build a unique id for the conversation
         messeges_Id = if (currentUid < rece_Id) {
             "${currentUid}_${rece_Id}"
         } else {
             "${rece_Id}_${currentUid}"
         }
+        // set up recycler view for messages
         adapter = ConversationAdapter(messages)
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
 
-
         binding.conversationRecyclerView.layoutManager = layoutManager
         binding.conversationRecyclerView.adapter = adapter
 
-
         listenFor_Dms()
 
+        // send message when btn is clicked
         binding.sendButton.setOnClickListener {
             val text = binding.messageEditText.text.toString().trim()
             if (text.isNotEmpty()) {
@@ -67,14 +75,17 @@ class ConversationActivity : AppCompatActivity() {
             }
         }
 
+        // open image picker when btn is clicked
         binding.attachButton.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
     }
 
+    // send message to firebase
     private fun send_Dms(text: String? = null, imageUrl: String? = null) {
+        // get current user UID
         val currentUid = auth.currentUser?.uid ?: return
-
+        // update conversation in db
         db.collection("conversations").document(messeges_Id)
             .set(
                 hashMapOf(
@@ -85,6 +96,7 @@ class ConversationActivity : AppCompatActivity() {
                 SetOptions.merge()
             )
 
+        // build a message map and add to db
         val Dms = hashMapOf(
             "text" to text,
             "imageUrl" to imageUrl,
@@ -92,7 +104,9 @@ class ConversationActivity : AppCompatActivity() {
             "receiverId" to rece_Id,
             "timestamp" to System.currentTimeMillis()
         )
+        // add message to db
         db.collection("conversations").document(messeges_Id).collection("messages").add(Dms)
+        // send notification to receiver
         db. collection("users").document(currentUid).get()
             .addOnSuccessListener { doc ->
                 val cur_UName = doc.getString("name")?.replaceFirstChar { it.uppercase() }
@@ -106,9 +120,9 @@ class ConversationActivity : AppCompatActivity() {
             }
 
     }
-
-
+    // listen for changes in messages
     private fun listenFor_Dms() {
+        // get current user UID
         val currentUid = auth.currentUser?.uid ?: return
         db.collection("conversations").document(messeges_Id).collection("messages")
             .orderBy("timestamp", Query.Direction.ASCENDING)

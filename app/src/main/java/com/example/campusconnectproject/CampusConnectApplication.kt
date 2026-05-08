@@ -13,9 +13,12 @@ class CampusConnectApplication : Application() {
     }
 
 
+    // set up firbase to store data in cache
     private fun setupFirestoredb() {
+        // set up firestore
         val datab = FirebaseFirestore.getInstance()
 
+        // apply memory cache settings
         val settings = FirebaseFirestoreSettings.Builder()
             .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build()).build()
         datab.firestoreSettings = settings

@@ -10,21 +10,23 @@ import com.example.campusconnectproject.databinding.FragmentCalendarBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import androidx.fragment.app.viewModels
 
 class CalendarFragment : Fragment() {
 
+    // View binding for the calendar layout
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
     
     // Key: Internal Date string ("yyyy-MM-dd"), Value: List of events
-    private val eventsByDate = mutableMapOf<String, MutableList<Event>>()
     private var selectedDateKey: String = ""
 
     // Formatters for storage and display
     private val storageSdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     private val displaySdf = SimpleDateFormat("MMMM d, yyyy", Locale.US)
-    private val eventDateSdf = SimpleDateFormat("d MMMM", Locale.US) // For "10 JUNE" format
+    private val eventDateSdf = SimpleDateFormat("d MMM", Locale.US)
 
+    private val viewModel: CalendarViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,7 +60,7 @@ class CalendarFragment : Fragment() {
         binding.addEventButton.setOnClickListener {
             val eventTitle = binding.eventTitleEditText.text.toString().trim()
             if (eventTitle.isNotEmpty()) {
-                val eventsForDate = eventsByDate.getOrPut(selectedDateKey) { mutableListOf() }
+                val eventsForDate = viewModel.evByDate.getOrPut(selectedDateKey) { mutableListOf() }
                 
                 // Create a new Event object
                 val newEvent = Event(
@@ -83,7 +85,7 @@ class CalendarFragment : Fragment() {
     }
 
     private fun updateUIForSelectedDate() {
-        val manualEvents = eventsByDate[selectedDateKey] ?: mutableListOf()
+        val manualEvents = viewModel.evByDate[selectedDateKey] ?: mutableListOf()
         
         // Convert the selectedDateKey back to a Date to compare with Event dates
         val selectedDate = storageSdf.parse(selectedDateKey)
@@ -91,6 +93,14 @@ class CalendarFragment : Fragment() {
 
         val joinedEvents = EventManager.joinedEvents.value.orEmpty().filter { 
             val normalizedEventDate = it.date.replace("\n", " ").uppercase()
+                .replace("JANUARY", "JAN").replace("FEBRUARY", "FEB")
+                .replace("MARCH", "MAR").replace("APRIL", "APR")
+                .replace("JUNE", "JUN").replace("JULY", "JUL")
+                .replace("AUGUST", "AUG").replace("SEPTEMBER", "SEP")
+                .replace("OCTOBER", "OCT").replace("NOVEMBER", "NOV")
+                .replace("DECEMBER", "DEC")
+
+            android.util.Log.d("CALENDAR", "eventDate: '$normalizedEventDate' vs calendarDate: '$eventDateFormat'")
             normalizedEventDate == eventDateFormat
         }
 

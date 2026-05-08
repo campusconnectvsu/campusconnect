@@ -12,11 +12,10 @@ class EditEventActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // --- View Binding Setup --- //
         binding = ActivityEditEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // --- Modern Back Handling --- //
+        //  Modern Back Handling
         onBackPressedDispatcher.addCallback(this) {
             // Simply finish the activity to return to the previous screen
             finish()
@@ -34,9 +33,7 @@ class EditEventActivity : AppCompatActivity() {
 
         // Find the save button and set a click listener
         binding.saveEventButton.setOnClickListener {
-            // Modern Alternative to FLAG_ACTIVITY_CLEAR_TOP for simple "Save and Return":
-            // Just finish() to return to the existing HomeActivity instance.
-            // If data needs to be passed back, consider using setResult() here.
+            // close the screen when save is clicked
             finish()
         }
     }
